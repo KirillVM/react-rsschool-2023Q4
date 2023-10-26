@@ -18,31 +18,31 @@
 // }
 
 module.exports = {
-  "root": true,
-  "extends": [
+  root: true,
+  extends: [
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "plugin:prettier/recommended"
   ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true
     },
-    "ecmaVersion": "latest",
-	"sourceType": "module"
+    ecmaVersion: "latest",
+	sourceType: "module"
   },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "jest": true,
-    "node": true
+  env: {
+    browser: true,
+    es6: true,
+    jest: true,
+    node: true
   },
-  "plugins": [
+  plugins: [
     "@typescript-eslint", "react", "react-hooks", "react-refresh"
   ],
-  "rules": {
+  rules: {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "comma-dangle": ["error", "only-multiline"],
@@ -58,10 +58,10 @@ module.exports = {
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off"
   },
-  "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "detect"
+  settings: {
+    react: {
+      pragma: "React",
+      version: "detect"
     }
   }
 }
