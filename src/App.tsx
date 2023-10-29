@@ -1,35 +1,37 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { Component, ReactNode, SyntheticEvent } from 'react';
 import './App.css';
+import SearchForm from './components/search-form/search-form';
+import { RickAndMortyResponse } from './types/ram-interfaces';
 
-function App() {
-  const [count, setCount] = useState(0);
+type AppState = {
+  searchData: RickAndMortyResponse | null;
+};
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+export default class App extends Component<Readonly<object>, AppState> {
+  constructor(props: Readonly<object>) {
+    super(props);
+    this.state = {
+      searchData: null,
+    };
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+  }
+  handleSearchSubmit = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    const getResponse = await fetch(
+      'https://rickandmortyapi.com/api/character',
+      {
+        method: 'GET',
+      }
+    );
+    this.setState({ searchData: await getResponse.json() });
+    console.log(this.state);
+  };
+
+  render(): ReactNode {
+    return (
+      <>
+        <SearchForm value={'search'} handleSubmit={this.handleSearchSubmit} />
+      </>
+    );
+  }
 }
-
-export default App;
