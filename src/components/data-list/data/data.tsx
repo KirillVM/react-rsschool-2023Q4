@@ -32,7 +32,7 @@ export default class Data extends Component<DataProps, DataState> {
   render(): ReactNode {
     return (
       <div className="data-wrapper">
-        <img src={this.state.imgUrl} alt="img" />
+        <img src={this.state.imgUrl} alt="img" className={'character-img'} />
         <ul>
           <li key={this.state.name}>{`Name: ${this.state.name}`}</li>
           <li key={this.state.status}>{`Status: ${this.state.status}`}</li>

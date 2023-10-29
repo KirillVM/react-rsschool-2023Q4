@@ -15,7 +15,7 @@ export default class SearchForm extends Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
     super(props);
     this.state = {
-      value: '',
+      value: localStorage.getItem('lastSearchRow') || '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,6 +26,7 @@ export default class SearchForm extends Component<SearchProps, SearchState> {
   }
 
   handleSubmit(event: SyntheticEvent): void {
+    localStorage.setItem('lastSearchRow', this.state.value);
     this.props.handleSubmit(event, this.state.value);
   }
 
