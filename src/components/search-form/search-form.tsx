@@ -1,10 +1,10 @@
-import { Component, SyntheticEvent } from 'react';
+import { Component, ReactNode, SyntheticEvent } from 'react';
 import Button from '../button/button';
 import './search-form.css';
 
 type SearchProps = {
   value: string;
-  handleSubmit: (event: SyntheticEvent) => Promise<void>;
+  handleSubmit: (event: SyntheticEvent, name: string) => Promise<void>;
 };
 
 type SearchState = {
@@ -18,15 +18,20 @@ export default class SearchForm extends Component<SearchProps, SearchState> {
       value: '',
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event: SyntheticEvent): void {
     this.setState({ value: (event.target as HTMLInputElement).value });
   }
 
-  render(): JSX.Element {
+  handleSubmit(event: SyntheticEvent): void {
+    this.props.handleSubmit(event, this.state.value);
+  }
+
+  render(): ReactNode {
     return (
-      <form className={'search-form'} onSubmit={this.props.handleSubmit}>
+      <form className={'search-form'} onSubmit={this.handleSubmit}>
         <label>
           <p>Search:</p>
           <input

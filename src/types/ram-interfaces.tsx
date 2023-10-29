@@ -11,11 +11,11 @@ export interface RickAndMortyResponseinfo {
 }
 
 export interface RickAndMortyResponseResult {
-  created: Date;
+  created: string;
   episode: string[];
   gender: string;
   id: number;
-  img: string;
+  image: string;
   location: {
     name: string;
     url: string;

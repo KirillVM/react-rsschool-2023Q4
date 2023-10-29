@@ -14,7 +14,7 @@ export default class Button extends Component<ButtonProps, ButtonState> {
     super(props);
     this.state = {
       type: 'submit',
-      text: 'Submit',
+      text: 'Search',
     };
   }
   render() {

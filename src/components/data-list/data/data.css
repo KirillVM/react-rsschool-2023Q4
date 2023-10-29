@@ -1,0 +1,10 @@
+.data-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 1rem;
+  border-bottom-left-radius: 10%;
+  border-bottom-right-radius: 10%;
+  border-style: solid;
+  border-width: 0.2rem;
+}
