@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import './button.css';
 
 type ButtonProps = {
   className: string[];

@@ -4,7 +4,7 @@ import './search-form.css';
 
 type SearchProps = {
   value: string;
-  handleSubmit: (event: SyntheticEvent, name: string) => Promise<void>;
+  handleSubmit: (name: string) => Promise<void>;
 };
 
 type SearchState = {
@@ -25,16 +25,17 @@ export default class SearchForm extends Component<SearchProps, SearchState> {
     this.setState({ value: (event.target as HTMLInputElement).value });
   }
 
-  handleSubmit(event: SyntheticEvent): void {
+  async handleSubmit(event: SyntheticEvent): Promise<void> {
+    event.preventDefault();
     localStorage.setItem('lastSearchRow', this.state.value);
-    this.props.handleSubmit(event, this.state.value);
+    await this.props.handleSubmit(this.state.value);
   }
 
   render(): ReactNode {
     return (
       <form className={'search-form'} onSubmit={this.handleSubmit}>
         <label>
-          <p>Search:</p>
+          <p className={'search-label'}>Search:</p>
           <input
             placeholder="Search"
             type="text"
@@ -42,7 +43,7 @@ export default class SearchForm extends Component<SearchProps, SearchState> {
             onChange={this.handleChange}
           ></input>
         </label>
-        <Button className={['button']} />
+        <Button className={['search-button']} />
       </form>
     );
   }

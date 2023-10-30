@@ -8,11 +8,11 @@ import Data from './data/data';
 import './data-list.css';
 
 type DataListProps = {
-  responce: RickAndMortyResponse;
+  response: RickAndMortyResponse;
 };
 
 type DataListState = {
-  responceInfo: RickAndMortyResponseinfo;
+  responseInfo: RickAndMortyResponseinfo;
   responseResults: RickAndMortyResponseResult[];
 };
 
@@ -20,18 +20,33 @@ export default class DataList extends Component<DataListProps, DataListState> {
   constructor(props: DataListProps) {
     super(props);
     this.state = {
-      responceInfo: this.props.responce.info,
-      responseResults: this.props.responce.results,
+      responseInfo: this.props.response.info,
+      responseResults: this.props.response.results,
     };
   }
 
+  shouldComponentUpdate(nextProps: Readonly<DataListProps>): boolean {
+    if (nextProps.response.results !== this.state.responseResults) {
+      this.setState({
+        responseInfo: nextProps.response.info,
+        responseResults: nextProps.response.results,
+      });
+      return true;
+    }
+    return false;
+  }
+
   render(): ReactNode {
-    const rows: ReactNode[] = [];
-    this.state.responseResults.forEach(
-      (element: RickAndMortyResponseResult): void => {
-        rows.push(<Data responceResult={element} />);
-      }
+    return (
+      <div className={'data-list-wrapper'}>
+        {this.state.responseResults.map(
+          (element: RickAndMortyResponseResult, i: number) => {
+            return (
+              <Data key={`${i}${element.name}`} responseResult={element} />
+            );
+          }
+        )}
+      </div>
     );
-    return <div className={'data-list-wrapper'}>{rows}</div>;
   }
 }

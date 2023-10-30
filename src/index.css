@@ -29,6 +29,10 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  /* background-image: url('https://i.ytimg.com/vi/iLAAajcGi6M/maxresdefault.jpg'); */
+  background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
+  opacity: 0.98;
+  filter: alpha(opacity = 40);
 }
 
 h1 {
@@ -37,10 +41,10 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: 2rem;
+  border: 2px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 2rem;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
@@ -48,7 +52,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #10c322;
 }
 button:focus,
 button:focus-visible {

@@ -3,7 +3,7 @@ import { RickAndMortyResponseResult } from '../../../types/ram-interfaces';
 import './data.css';
 
 type DataProps = {
-  responceResult: RickAndMortyResponseResult;
+  responseResult: RickAndMortyResponseResult;
 };
 
 type DataState = {
@@ -19,14 +19,13 @@ export default class Data extends Component<DataProps, DataState> {
   constructor(props: DataProps) {
     super(props);
     this.state = {
-      imgUrl: this.props.responceResult.image,
-      name: this.props.responceResult.name,
-      status: this.props.responceResult.status,
-      spacies: this.props.responceResult.species,
-      type: this.props.responceResult.type || 'Unknown',
-      gender: this.props.responceResult.gender,
+      imgUrl: this.props.responseResult.image,
+      name: this.props.responseResult.name,
+      status: this.props.responseResult.status,
+      spacies: this.props.responseResult.species,
+      type: this.props.responseResult.type || 'unknown',
+      gender: this.props.responseResult.gender,
     };
-    console.log(this.props.responceResult.name);
   }
 
   render(): ReactNode {
@@ -34,11 +33,22 @@ export default class Data extends Component<DataProps, DataState> {
       <div className="data-wrapper">
         <img src={this.state.imgUrl} alt="img" className={'character-img'} />
         <ul>
-          <li key={this.state.name}>{`Name: ${this.state.name}`}</li>
+          {Object.entries(this.state).map((data) => {
+            return data[0] !== 'imgUrl' ? (
+              <li key={`${data[0]}${data[1]}`}>
+                {`${data[0].charAt(0).toUpperCase() + data[0].slice(1)}: ${
+                  data[1]
+                }`}
+              </li>
+            ) : (
+              ''
+            );
+          })}
+          {/* <li key={this.state.name}>{`Name: ${this.state.name}`}</li>
           <li key={this.state.status}>{`Status: ${this.state.status}`}</li>
           <li key={this.state.spacies}>{`Spacies: ${this.state.spacies}`}</li>
           <li key={this.state.type}>{`Type: ${this.state.type}`}</li>
-          <li key={this.state.gender}>{`Gender: ${this.state.gender}`}</li>
+          <li key={this.state.gender}>{`Gender: ${this.state.gender}`}</li> */}
         </ul>
       </div>
     );
