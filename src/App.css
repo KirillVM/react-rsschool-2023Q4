@@ -11,3 +11,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.error-button {
+  position: relative;
+  left: 40rem;
+}

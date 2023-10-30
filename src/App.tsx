@@ -6,6 +6,7 @@ import DataList from './components/data-list/data-list';
 import Loader from './components/loader/loader';
 
 type AppState = {
+  isError: boolean;
   isLoading: boolean;
   searchParams: string;
   searchData: RickAndMortyResponse | null;
@@ -15,6 +16,7 @@ export default class App extends Component<Readonly<object>, AppState> {
   constructor(props: Readonly<object>) {
     super(props);
     this.state = {
+      isError: false,
       isLoading: false,
       searchParams: localStorage.getItem('lastSearchRow') || '',
       searchData: null,
@@ -31,9 +33,15 @@ export default class App extends Component<Readonly<object>, AppState> {
   };
 
   render(): ReactNode {
+    if (this.state.isError) {
+      throw new Error('My Error');
+    }
     return (
       <>
         <SearchForm value={'search'} handleSubmit={this.handleSearchSubmit} />
+        <button className={'error-button'} onClick={this.ErrorThrow}>
+          ThrowError
+        </button>
         <hr></hr>
         {this.state.isLoading ? (
           <Loader />
@@ -45,6 +53,10 @@ export default class App extends Component<Readonly<object>, AppState> {
       </>
     );
   }
+
+  ErrorThrow = () => {
+    this.setState({ isError: true });
+  };
 
   getData = async (name: string) => {
     this.setState({ isLoading: true });
