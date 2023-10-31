@@ -6,7 +6,7 @@ export default class Loader extends Component {
     return (
       <>
         <div className="loader">
-          <p>Please wait.....</p>
+          <p style={{ margin: 0 }}>Please wait.....</p>
           <img
             src="https://media.tenor.com/H2mK_NOHBh8AAAAi/rick-and.gif"
             alt="loader"
