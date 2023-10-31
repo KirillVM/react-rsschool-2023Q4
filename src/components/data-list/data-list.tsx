@@ -40,7 +40,7 @@ export default class DataList extends Component<DataListProps, DataListState> {
     return (
       <div className={'data-list-wrapper'}>
         {this.state.responseResults.map(
-          (element: RickAndMortyResponseResult, i: number) => {
+          (element: RickAndMortyResponseResult, i: number): ReactNode => {
             return (
               <Data key={`${i}${element.name}`} responseResult={element} />
             );

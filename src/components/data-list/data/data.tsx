@@ -33,22 +33,19 @@ export default class Data extends Component<DataProps, DataState> {
       <div className="data-wrapper">
         <img src={this.state.imgUrl} alt="img" className={'character-img'} />
         <ul>
-          {Object.entries(this.state).map((data) => {
-            return data[0] !== 'imgUrl' ? (
-              <li key={`${data[0]}${data[1]}`}>
-                {`${data[0].charAt(0).toUpperCase() + data[0].slice(1)}: ${
-                  data[1]
-                }`}
-              </li>
-            ) : (
-              ''
-            );
-          })}
-          {/* <li key={this.state.name}>{`Name: ${this.state.name}`}</li>
-          <li key={this.state.status}>{`Status: ${this.state.status}`}</li>
-          <li key={this.state.spacies}>{`Spacies: ${this.state.spacies}`}</li>
-          <li key={this.state.type}>{`Type: ${this.state.type}`}</li>
-          <li key={this.state.gender}>{`Gender: ${this.state.gender}`}</li> */}
+          {Object.entries(this.state).map(
+            (data: [string, string]): ReactNode => {
+              return data[0] !== 'imgUrl' ? (
+                <li key={`${data[0]}${data[1]}`}>
+                  {`${data[0].charAt(0).toUpperCase() + data[0].slice(1)}: ${
+                    data[1]
+                  }`}
+                </li>
+              ) : (
+                ''
+              );
+            }
+          )}
         </ul>
       </div>
     );

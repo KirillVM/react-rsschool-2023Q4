@@ -20,11 +20,8 @@ export default class Button extends Component<ButtonProps, ButtonState> {
   }
   render() {
     return (
-      <button
-        className={this.props.className.join(' ')}
-        type={(this.state as ButtonState).type}
-      >
-        {(this.state as ButtonState).text}
+      <button className={this.props.className.join(' ')} type={this.state.type}>
+        {this.state.text}
       </button>
     );
   }

@@ -28,7 +28,7 @@ export default class App extends Component<Readonly<object>, AppState> {
     this.getData(this.state.searchParams);
   }
 
-  handleSearchSubmit = async (name: string) => {
+  handleSearchSubmit = async (name: string): Promise<void> => {
     this.getData(name);
   };
 
@@ -39,7 +39,7 @@ export default class App extends Component<Readonly<object>, AppState> {
     return (
       <>
         <SearchForm value={'search'} handleSubmit={this.handleSearchSubmit} />
-        <button className={'error-button'} onClick={this.ErrorThrow}>
+        <button className={'error-button'} onClick={this.errorThrow}>
           ThrowError
         </button>
         <hr></hr>
@@ -54,19 +54,19 @@ export default class App extends Component<Readonly<object>, AppState> {
     );
   }
 
-  ErrorThrow = () => {
+  errorThrow = (): void => {
     this.setState({ isError: true });
   };
 
-  getData = async (name: string) => {
+  getData = async (name: string): Promise<void> => {
     this.setState({ isLoading: true });
-    setTimeout(async () => {
+    setTimeout(async (): Promise<void> => {
       const getResponse = await fetch(
         `https://rickandmortyapi.com/api/character/?name=${name}`,
         {
           method: 'GET',
         }
-      ).catch((error) => console.log(error));
+      ).catch((error: Error): void => console.log(error));
       if (getResponse && getResponse.status === 200) {
         this.setState({
           searchData: await getResponse.json(),
