@@ -48,7 +48,7 @@ export default class App extends Component<Readonly<object>, AppState> {
         ) : this.state.searchData ? (
           <DataList response={this.state.searchData} />
         ) : (
-          <p>NO DATA</p>
+          <p style={{fontSize: '2rem'}}>NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER</p>
         )}
       </>
     );
@@ -71,6 +71,11 @@ export default class App extends Component<Readonly<object>, AppState> {
         this.setState({
           searchData: await getResponse.json(),
           searchParams: name,
+          isLoading: false,
+        });
+      } else {
+        this.setState({
+          searchData: null,
           isLoading: false,
         });
       }
