@@ -1,0 +1,11 @@
+.search-form {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-label {
+  font-size: 2rem;
+  color: #a9f3fd;
+  font-weight: 500;
+  margin: 0;
+}
