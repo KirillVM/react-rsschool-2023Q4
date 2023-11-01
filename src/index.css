@@ -29,7 +29,6 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  /* background-image: url('https://i.ytimg.com/vi/iLAAajcGi6M/maxresdefault.jpg'); */
   background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
   opacity: 0.98;
   filter: alpha(opacity = 40);
