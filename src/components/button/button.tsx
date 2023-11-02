@@ -1,28 +1,18 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import './button.css';
 
 type ButtonProps = {
   className: string[];
 };
 
-type ButtonState = {
-  type: 'submit' | 'button' | 'reset' | undefined;
-  text: string;
-};
-
-export default class Button extends Component<ButtonProps, ButtonState> {
-  constructor(props: ButtonProps) {
-    super(props);
-    this.state = {
-      type: 'submit',
-      text: 'Search',
-    };
-  }
-  render() {
+const Button = ({className}: ButtonProps): React.JSX.Element => {
+    const [type, setType] = useState<'submit' | 'button' | 'reset' | undefined>('submit');
+    const [text, setText] = useState<string>('Search');
     return (
-      <button className={this.props.className.join(' ')} type={this.state.type}>
-        {this.state.text}
+      <button className={className.join(' ')} type={type}>
+        {text}
       </button>
     );
-  }
 }
+
+export default Button;
