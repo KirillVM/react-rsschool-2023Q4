@@ -8,7 +8,7 @@ import Loader from './components/loader/loader';
 const App = (): JSX.Element => {
   const [isErrorS, setIsErrorS] = useState<boolean>(false);
   const [isLoadingS, setIsLoadingS] = useState<boolean>(false);
-  const [searchParamsS, setSearchParamsSS] = useState<string>(
+  const [searchParamsS, setSearchParamsS] = useState<string>(
     localStorage.getItem('lastSearchRow') || ''
   );
   const [searchDataS, setSearchDataS] = useState<RickAndMortyResponse | null>(
@@ -33,7 +33,7 @@ const App = (): JSX.Element => {
         }
       ).catch((error: Error): void => console.log(error));
       if (getResponse && getResponse.status === 200) {
-        setSearchParamsSS(name);
+        setSearchParamsS(name);
         setSearchDataS(await getResponse.json());
         setIsLoadingS(false);
       } else {
@@ -49,7 +49,7 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      <SearchForm value={'search'} handleSubmit={getData} />
+      <SearchForm handler={getData} />
       <button className={'error-button'} onClick={errorThrow}>
         ThrowError
       </button>
