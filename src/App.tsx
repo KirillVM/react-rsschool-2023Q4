@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import SearchForm from './components/search-form/search-form';
 import { RickAndMortyResponse } from './types/ram-interfaces';
@@ -43,9 +43,9 @@ const App = (): JSX.Element => {
     }, 3000);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     getData(searchParamsS);
-  });
+  }, [searchParamsS]);
 
   return (
     <>
