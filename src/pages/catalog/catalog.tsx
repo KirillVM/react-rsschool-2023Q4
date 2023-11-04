@@ -49,7 +49,7 @@ const Main = ({ type }: MainProps): JSX.Element => {
 
   useLayoutEffect((): void => {
     getData(searchParams);
-  });
+  }, [searchParams]);
 
   return (
     <>
