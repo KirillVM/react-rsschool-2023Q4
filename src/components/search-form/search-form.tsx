@@ -33,7 +33,7 @@ const SearchForm = ({ submitHandler }: SearchProps): JSX.Element => {
           onChange={handleChange}
         ></input>
       </label>
-      <Button className={['search-button']} />
+      <Button className={['search-button']} type={'submit'} text={'Search'} />
     </form>
   );
 };

@@ -4,6 +4,9 @@ import { RickAndMortyResponse } from '../../types/ram-types';
 import SearchForm from '../../components/search-form/search-form';
 import Loader from '../../components/loader/loader';
 import DataList from '../../components/data-list/data-list';
+import Button from '../../components/button/button';
+
+const BASE_URL = 'https://rickandmortyapi.com/api';
 
 type MainProps = {
   type: string;
@@ -30,12 +33,9 @@ const Main = ({ type }: MainProps): JSX.Element => {
   const getData = async (name: string): Promise<void> => {
     setIsLoading(true);
     setTimeout(async (): Promise<void> => {
-      const getResponse = await fetch(
-        `https://rickandmortyapi.com/api/${type}/?name=${name}`,
-        {
-          method: 'GET',
-        }
-      ).catch((error: Error): void => console.log(error));
+      const getResponse = await fetch(`${BASE_URL}/${type}/?name=${name}`, {
+        method: 'GET',
+      }).catch((error: Error): void => console.log(error));
       if (getResponse && getResponse.status === 200) {
         setSearchParams(name);
         setSearchData(await getResponse.json());
@@ -63,9 +63,12 @@ const Main = ({ type }: MainProps): JSX.Element => {
           NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
         </p>
       )}
-      <button className={'error-button'} onClick={errorThrow}>
-        ThrowError
-      </button>
+      <Button
+        className={['error-button']}
+        text={'errorThrow'}
+        type={'button'}
+        callBack={errorThrow}
+      />
     </>
   );
 };

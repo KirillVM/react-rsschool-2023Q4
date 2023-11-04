@@ -1,15 +1,24 @@
-import { useState } from 'react';
 import './button.css';
 
 type ButtonProps = {
   className: string[];
+  text: string;
+  type?: 'submit' | 'button' | 'reset' | undefined;
+  callBack?: () => void;
 };
 
-const Button = ({ className }: ButtonProps): React.JSX.Element => {
-  const [type] = useState<'submit' | 'button' | 'reset' | undefined>('submit');
-  const [text] = useState<string>('Search');
+const Button = ({
+  className,
+  text,
+  type,
+  callBack,
+}: ButtonProps): React.JSX.Element => {
   return (
-    <button className={className.join(' ')} type={type}>
+    <button
+      className={`button ${className.join(' ')}`}
+      type={type}
+      onClick={callBack}
+    >
       {text}
     </button>
   );

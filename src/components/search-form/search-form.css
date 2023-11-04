@@ -24,3 +24,10 @@
   width: 100%;
   align-self: center;
 }
+
+.search-button {
+  display: flex;
+  height: 2rem;
+  align-self: flex-end;
+  align-items: center;
+}

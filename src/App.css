@@ -1,5 +1,6 @@
 #root {
   width: 1280px;
+  min-height: 100%;
   margin: 0 auto;
   scroll-behavior: smooth;
   overflow-x: hidden;
