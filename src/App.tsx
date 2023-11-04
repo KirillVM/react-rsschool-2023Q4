@@ -1,68 +1,29 @@
-import { useEffect, useState } from 'react';
 import './App.css';
-import SearchForm from './components/search-form/search-form';
-import { RickAndMortyResponse } from './types/ram-interfaces';
-import DataList from './components/data-list/data-list';
-import Loader from './components/loader/loader';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Main from './pages/catalog/catalog';
+import RootLayout from './layouts/root-layout';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <Main type={'character'} />,
+      },
+      {
+        path: 'characters',
+        element: <Main type={'character'} />,
+      },
+    ],
+  },
+]);
 
 const App = (): JSX.Element => {
-  const [isErrorS, setIsErrorS] = useState<boolean>(false);
-  const [isLoadingS, setIsLoadingS] = useState<boolean>(false);
-  const [searchParamsS, setSearchParamsS] = useState<string>(
-    localStorage.getItem('lastSearchRow') || ''
-  );
-  const [searchDataS, setSearchDataS] = useState<RickAndMortyResponse | null>(
-    null
-  );
-
-  if (isErrorS) {
-    throw new Error('My Error');
-  }
-
-  const errorThrow = (): void => {
-    setIsErrorS(true);
-  };
-
-  const getData = async (name: string): Promise<void> => {
-    setIsLoadingS(true);
-    setTimeout(async (): Promise<void> => {
-      const getResponse = await fetch(
-        `https://rickandmortyapi.com/api/character/?name=${name}`,
-        {
-          method: 'GET',
-        }
-      ).catch((error: Error): void => console.log(error));
-      if (getResponse && getResponse.status === 200) {
-        setSearchParamsS(name);
-        setSearchDataS(await getResponse.json());
-        setIsLoadingS(false);
-      } else {
-        setSearchDataS(null);
-        setIsLoadingS(false);
-      }
-    }, 3000);
-  };
-
-  useEffect(() => {
-    getData(searchParamsS);
-  }, [searchParamsS]);
-
   return (
     <>
-      <SearchForm handler={getData} />
-      <button className={'error-button'} onClick={errorThrow}>
-        ThrowError
-      </button>
-      <hr></hr>
-      {isLoadingS ? (
-        <Loader />
-      ) : searchDataS ? (
-        <DataList response={searchDataS} />
-      ) : (
-        <p style={{ fontSize: '2rem' }}>
-          NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
-        </p>
-      )}
+      <RouterProvider router={router} />
     </>
   );
 };

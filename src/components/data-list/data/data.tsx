@@ -1,36 +1,16 @@
 import { useState } from 'react';
-import { RickAndMortyResponseResult } from '../../../types/ram-interfaces';
+import { CardData, RickAndMortyResponseResult } from '../../../types/ram-types';
 import './data.css';
+import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
 
 type DataProps = {
   responseResult: RickAndMortyResponseResult;
 };
 
-type CardData = {
-  imageUrl: string;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-};
-
-function getPartialResponse(
-  responseResult: RickAndMortyResponseResult
-): CardData {
-  const partialResData: CardData = {
-    imageUrl: responseResult.image,
-    name: responseResult.name,
-    status: responseResult.status,
-    species: responseResult.species,
-    type: responseResult.type ? responseResult.type : 'none',
-    gender: responseResult.gender,
-  };
-  return partialResData;
-}
-
 const Data = ({ responseResult }: DataProps): JSX.Element => {
-  const [cardData] = useState<CardData>(getPartialResponse(responseResult));
+  const [cardData] = useState<CardData>(
+    getCardDataFromResponse(responseResult)
+  );
   return (
     <div className="data-wrapper">
       <img src={cardData.imageUrl} alt="img" className={'character-img'} />

@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import {
   RickAndMortyResponse,
   RickAndMortyResponseResult,
-} from '../../types/ram-interfaces';
+} from '../../types/ram-types';
 import Data from './data/data';
 import './data-list.css';
 

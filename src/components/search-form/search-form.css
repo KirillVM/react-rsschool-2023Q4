@@ -1,6 +1,15 @@
 .search-form {
+  width: 60%;
   display: flex;
-  gap: 1rem;
+  justify-content: center;
+  gap: 3rem;
+  align-self: center;
+}
+
+.search-form label{
+  width: 50%;
+  align-self: center;
+  align-items: center;
 }
 
 .search-label {
@@ -8,4 +17,10 @@
   color: #a9f3fd;
   font-weight: 500;
   margin: 0;
+
+}
+
+.search-input {
+  width: 100%;
+  align-self: center;
 }

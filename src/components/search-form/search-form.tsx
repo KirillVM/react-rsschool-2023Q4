@@ -3,22 +3,22 @@ import Button from '../button/button';
 import './search-form.css';
 
 type SearchProps = {
-  handler: (name: string) => Promise<void>;
+  submitHandler: (name: string) => Promise<void>;
 };
 
-const SearchForm = ({ handler }: SearchProps): JSX.Element => {
-  const [valueS, setValueS] = useState<string>(
+const SearchForm = ({ submitHandler }: SearchProps): JSX.Element => {
+  const [value, setValue] = useState<string>(
     localStorage.getItem('lastSearchRow') || ''
   );
 
   const handleChange = (event: SyntheticEvent): void => {
-    setValueS((event.target as HTMLInputElement).value);
+    setValue((event.target as HTMLInputElement).value);
   };
 
   const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
     event.preventDefault();
-    localStorage.setItem('lastSearchRow', valueS);
-    await handler(valueS);
+    localStorage.setItem('lastSearchRow', value);
+    await submitHandler(value);
   };
 
   return (
@@ -26,9 +26,10 @@ const SearchForm = ({ handler }: SearchProps): JSX.Element => {
       <label>
         <p className={'search-label'}>Search:</p>
         <input
+          className="search-input"
           placeholder="Search"
           type="text"
-          value={valueS}
+          value={value}
           onChange={handleChange}
         ></input>
       </label>

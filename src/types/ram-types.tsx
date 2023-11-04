@@ -30,3 +30,12 @@ export interface RickAndMortyResponseResult {
   type: string;
   url: string;
 }
+
+export type CardData = {
+  imageUrl: string;
+  name: string;
+  status: string;
+  species: string;
+  type: string;
+  gender: string;
+};
