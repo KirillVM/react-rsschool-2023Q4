@@ -1,50 +1,40 @@
-import { Component, ReactNode, SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import Button from '../button/button';
 import './search-form.css';
 
 type SearchProps = {
-  value: string;
-  handleSubmit: (name: string) => Promise<void>;
+  handler: (name: string) => Promise<void>;
 };
 
-type SearchState = {
-  value: string;
-};
+const SearchForm = ({ handler }: SearchProps): JSX.Element => {
+  const [valueS, setValueS] = useState<string>(
+    localStorage.getItem('lastSearchRow') || ''
+  );
 
-export default class SearchForm extends Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    this.state = {
-      value: localStorage.getItem('lastSearchRow') || '',
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  const handleChange = (event: SyntheticEvent): void => {
+    setValueS((event.target as HTMLInputElement).value);
+  };
 
-  handleChange(event: SyntheticEvent): void {
-    this.setState({ value: (event.target as HTMLInputElement).value });
-  }
-
-  async handleSubmit(event: SyntheticEvent): Promise<void> {
+  const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
     event.preventDefault();
-    localStorage.setItem('lastSearchRow', this.state.value);
-    await this.props.handleSubmit(this.state.value);
-  }
+    localStorage.setItem('lastSearchRow', valueS);
+    await handler(valueS);
+  };
 
-  render(): ReactNode {
-    return (
-      <form className={'search-form'} onSubmit={this.handleSubmit}>
-        <label>
-          <p className={'search-label'}>Search:</p>
-          <input
-            placeholder="Search"
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          ></input>
-        </label>
-        <Button className={['search-button']} />
-      </form>
-    );
-  }
-}
+  return (
+    <form className={'search-form'} onSubmit={handleSubmit}>
+      <label>
+        <p className={'search-label'}>Search:</p>
+        <input
+          placeholder="Search"
+          type="text"
+          value={valueS}
+          onChange={handleChange}
+        ></input>
+      </label>
+      <Button className={['search-button']} />
+    </form>
+  );
+};
+
+export default SearchForm;
