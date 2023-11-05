@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import {
   RickAndMortyResponse,
   RickAndMortyResponseResult,
@@ -8,18 +8,24 @@ import './data-list.css';
 
 type DataListProps = {
   response: RickAndMortyResponse;
+  onClickDataHandler: (name: string) => void;
 };
 
-const DataList = ({ response }: DataListProps): JSX.Element => {
-  const [responseResults] = useState<RickAndMortyResponseResult[]>(
-    response.results
-  );
-
+const DataList = ({
+  response,
+  onClickDataHandler,
+}: DataListProps): JSX.Element => {
   return (
     <div className={'data-list-wrapper'}>
-      {responseResults.map(
+      {response.results.map(
         (element: RickAndMortyResponseResult, i: number): ReactNode => {
-          return <Data key={`${i}${element.name}`} responseResult={element} />;
+          return (
+            <Data
+              key={`${i}${element.name}`}
+              responseResult={element}
+              onClickDataHandler={onClickDataHandler}
+            />
+          );
         }
       )}
     </div>

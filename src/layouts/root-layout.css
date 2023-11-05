@@ -52,9 +52,6 @@
 .root-layout-main {
   min-height: 70%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  row-gap: 2rem;
-  padding-top: 3rem;
+  justify-content:center;
   background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
 }

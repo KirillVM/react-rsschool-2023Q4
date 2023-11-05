@@ -1,10 +1,11 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './catalog.css';
 import { RickAndMortyResponse } from '../../types/ram-types';
 import SearchForm from '../../components/search-form/search-form';
 import Loader from '../../components/loader/loader';
 import DataList from '../../components/data-list/data-list';
 import Button from '../../components/button/button';
+import DetailedData from '../../components/data-list/detailed-data/detailed-data';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 
@@ -21,6 +22,9 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const [searchData, setSearchData] = useState<RickAndMortyResponse | null>(
     null
   );
+  const [nameDetailed, setNameDetailed] = useState<string>('');
+
+  const refCatalogDetailed = useRef<HTMLDivElement>(null);
 
   if (isError) {
     throw new Error('My Error');
@@ -46,29 +50,74 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
       }
     }, 3000);
   };
+
+  const handleDetailedCardClose = (event: Event): void => {
+    console.log(handleDetailedCardClose);
+    if (
+      refCatalogDetailed.current &&
+      !refCatalogDetailed.current.contains(event.target as Node)
+    ) {
+      refCatalogDetailed.current.setAttribute('style', 'display: none');
+      document.removeEventListener('mousedown', handleDetailedCardClose);
+    }
+  };
+
+  const onClickDataHandler = (name: string): void => {
+    console.log('click');
+    setNameDetailed(name);
+    refCatalogDetailed.current?.setAttribute('style', 'display: flex');
+    document.addEventListener('mousedown', handleDetailedCardClose);
+  };
+
+  useEffect((): void => {
+    document.addEventListener('mousedown', handleDetailedCardClose);
+    setNameDetailed('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   useLayoutEffect((): void => {
     getData(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-
   return (
     <>
-      <SearchForm submitHandler={getData} />
-      {isLoading ? (
-        <Loader />
-      ) : searchData ? (
-        <DataList response={searchData} />
-      ) : (
-        <p style={{ fontSize: '2rem' }}>
-          NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
-        </p>
-      )}
-      <Button
-        className={['error-button']}
-        text={'errorThrow'}
-        type={'button'}
-        callBack={errorThrow}
-      />
+      <div className="catalog-list">
+        <Button
+          className={['error-button']}
+          text={'errorThrow'}
+          type={'button'}
+          callBack={errorThrow}
+        />
+        <SearchForm submitHandler={getData} />
+        {isLoading ? (
+          <Loader />
+        ) : searchData ? (
+          <DataList
+            response={searchData}
+            onClickDataHandler={onClickDataHandler}
+          />
+        ) : (
+          <p style={{ fontSize: '2rem' }}>
+            NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
+          </p>
+        )}
+      </div>
+      <div ref={refCatalogDetailed} className="catalog-detailed">
+        {isLoading ? (
+          <Loader />
+        ) : searchData && nameDetailed ? (
+          <DetailedData
+            responseResult={
+              searchData.results.filter(
+                (element) => element.name === nameDetailed
+              )[0]
+            }
+          />
+        ) : (
+          <p style={{ fontSize: '2rem' }}>
+            NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
+          </p>
+        )}
+      </div>
     </>
   );
 };

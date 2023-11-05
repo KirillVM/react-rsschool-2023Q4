@@ -1,33 +1,27 @@
-import { useState } from 'react';
-import { CardData, RickAndMortyResponseResult } from '../../../types/ram-types';
+import { RickAndMortyResponseResult } from '../../../types/ram-types';
 import './data.css';
-import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
+import { SyntheticEvent, useRef } from 'react';
 
 type DataProps = {
   responseResult: RickAndMortyResponseResult;
+  onClickDataHandler: (name: string) => void;
 };
 
-const Data = ({ responseResult }: DataProps): JSX.Element => {
-  const [cardData] = useState<CardData>(
-    getCardDataFromResponse(responseResult)
-  );
+const Data = ({
+  responseResult,
+  onClickDataHandler,
+}: DataProps): JSX.Element => {
+  const handleCardClick = (e: SyntheticEvent): void => {
+    e.preventDefault();
+    onClickDataHandler(responseResult.name);
+  };
+  const refCard = useRef<HTMLDivElement>(null);
+  const name = responseResult.name;
   return (
-    <div className="data-wrapper">
-      <img src={cardData.imageUrl} alt="img" className={'character-img'} />
+    <div className="data-wrapper" ref={refCard} onClick={handleCardClick}>
+      <img src={responseResult.image} alt="img" className={'character-img'} />
       <ul>
-        {Object.entries(cardData).map(
-          (data: [string, string]): JSX.Element | '' => {
-            return data[0] !== 'imageUrl' ? (
-              <li key={`${data[0]}${data[1]}`}>
-                {`${data[0].charAt(0).toUpperCase() + data[0].slice(1)}: ${
-                  data[1]
-                }`}
-              </li>
-            ) : (
-              ''
-            );
-          }
-        )}
+        <li key={`name${name}`}>{`${name}`}</li>
       </ul>
     </div>
   );

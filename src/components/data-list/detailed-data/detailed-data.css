@@ -1,7 +1,7 @@
-.data-wrapper {
+.detailed-data-wrapper {
   align-self: center;
-  width: 10rem;
-  height: 15rem;
+  width: 30rem;
+  height: 45rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,17 +9,10 @@
   border-style: solid;
   border-width: 0.2rem;
   background-color: blanchedalmond;
-  font-size: 1rem;
+  font-size: 1.8rem;
   color: #213547 !important;
   cursor: pointer;
   transition: all 0.3s ease-out;
-  
-}
-
-.data-wrapper ul {
-  list-style-type: none;
-  padding: 1rem;
-  text-align: center;
 }
 
 .data-wrapper:hover {
