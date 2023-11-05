@@ -6,6 +6,7 @@ import Loader from '../../components/loader/loader';
 import DataList from '../../components/data-list/data-list';
 import Button from '../../components/button/button';
 import DetailedData from '../../components/data-list/detailed-data/detailed-data';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 
@@ -14,6 +15,17 @@ type CatalogProps = {
 };
 
 const Catalog = ({ type }: CatalogProps): JSX.Element => {
+  const location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+  const currentQueryParams = new URLSearchParams(location.search);
+
+  const handleParamsUpdate = (): void => {
+    currentQueryParams.set('name', searchParams);
+    console.log(currentQueryParams);
+    const newSearch: string = `?${currentQueryParams}`;
+    navigate({ search: newSearch });
+  };
+
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<string>(
@@ -59,22 +71,27 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     ) {
       refCatalogDetailed.current.setAttribute('style', 'display: none');
       document.removeEventListener('mousedown', handleDetailedCardClose);
+      setNameDetailed('');
     }
   };
 
   const onClickDataHandler = (name: string): void => {
     console.log('click');
+    if (!nameDetailed) {
+      document.addEventListener('mousedown', handleDetailedCardClose);
+    }
     setNameDetailed(name);
     refCatalogDetailed.current?.setAttribute('style', 'display: flex');
-    document.addEventListener('mousedown', handleDetailedCardClose);
   };
 
   useEffect((): void => {
     document.addEventListener('mousedown', handleDetailedCardClose);
     setNameDetailed('');
+    handleParamsUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
   useLayoutEffect((): void => {
+    handleParamsUpdate();
     getData(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);

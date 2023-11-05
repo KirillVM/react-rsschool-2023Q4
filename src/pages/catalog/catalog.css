@@ -14,7 +14,7 @@
   flex-grow: 1;
   row-gap: 2rem;
   padding-top: 1rem;
-  overflow-x: hidden;
+  overflow: hidden;
   background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
 }
 
