@@ -1,0 +1,28 @@
+.error-button {
+  /* position: relative; */
+  width: 22rem;
+  margin-bottom: 2rem;
+  height: 5rem;
+}
+
+.catalog-list {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+  row-gap: 2rem;
+  overflow: hidden;
+  overflow-y: scroll;
+  background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
+}
+
+.catalog-detailed {
+  min-height: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  width: 200vw;
+  padding-top: 3rem;
+  background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
+}
