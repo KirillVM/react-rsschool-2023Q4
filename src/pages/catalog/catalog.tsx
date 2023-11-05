@@ -8,11 +8,11 @@ import Button from '../../components/button/button';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 
-type MainProps = {
+type CatalogProps = {
   type: string;
 };
 
-const Main = ({ type }: MainProps): JSX.Element => {
+const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<string>(
@@ -46,9 +46,9 @@ const Main = ({ type }: MainProps): JSX.Element => {
       }
     }, 3000);
   };
-
   useLayoutEffect((): void => {
     getData(searchParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   return (
@@ -73,4 +73,4 @@ const Main = ({ type }: MainProps): JSX.Element => {
   );
 };
 
-export default Main;
+export default Catalog;

@@ -11,6 +11,13 @@
   background-color: blanchedalmond;
   font-size: 1.8rem;
   color: #213547 !important;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+
+.data-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px 10px #309932;
 }
 
 .character-img {

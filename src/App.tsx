@@ -1,7 +1,8 @@
 import './App.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Main from './pages/catalog/catalog';
+import Catalog from './pages/catalog/catalog';
 import RootLayout from './layouts/root-layout';
+import ErrorPage from './pages/error/error-page';
 
 const router = createBrowserRouter([
   {
@@ -10,11 +11,22 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Main type={'character'} />,
+        element: <Catalog type={'character'} />,
       },
       {
         path: 'characters',
-        element: <Main type={'character'} />,
+        element: <Catalog type={'character'} />,
+      },
+    ],
+  },
+
+  {
+    path: '*',
+    element: <RootLayout />,
+    children: [
+      {
+        path: '*',
+        element: <ErrorPage />,
       },
     ],
   },
