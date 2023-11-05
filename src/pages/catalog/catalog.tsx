@@ -7,6 +7,7 @@ import DataList from '../../components/data-list/data-list';
 import Button from '../../components/button/button';
 import DetailedData from '../../components/data-list/detailed-data/detailed-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import Pagination from '../../components/pagination/pagination';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 
@@ -35,6 +36,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     null
   );
   const [nameDetailed, setNameDetailed] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const refCatalogDetailed = useRef<HTMLDivElement>(null);
 
@@ -46,12 +48,18 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     setIsError(true);
   };
 
-  const getData = async (name: string): Promise<void> => {
+  const getData = async (
+    name: string,
+    page: number = currentPage
+  ): Promise<void> => {
     setIsLoading(true);
     setTimeout(async (): Promise<void> => {
-      const getResponse = await fetch(`${BASE_URL}/${type}/?name=${name}`, {
-        method: 'GET',
-      }).catch((error: Error): void => console.log(error));
+      const getResponse = await fetch(
+        `${BASE_URL}/${type}/?page=${page}&name=${name}`,
+        {
+          method: 'GET',
+        }
+      ).catch((error: Error): void => console.log(error));
       if (getResponse && getResponse.status === 200) {
         setSearchParams(name);
         setSearchData(await getResponse.json());
@@ -75,7 +83,11 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     }
   };
 
-  const onClickDataHandler = (name: string): void => {
+  const setPageHandler = (num: number): void => {
+    setCurrentPage(currentPage + num);
+  };
+
+  const onClickCardHandler = (name: string): void => {
     console.log('click');
     if (!nameDetailed) {
       document.addEventListener('mousedown', handleDetailedCardClose);
@@ -85,16 +97,16 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   };
 
   useEffect((): void => {
-    document.addEventListener('mousedown', handleDetailedCardClose);
     setNameDetailed('');
     handleParamsUpdate();
+    setCurrentPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
   useLayoutEffect((): void => {
     handleParamsUpdate();
-    getData(searchParams);
+    getData(searchParams, currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
   return (
     <>
       <div className="catalog-list">
@@ -110,13 +122,18 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
         ) : searchData ? (
           <DataList
             response={searchData}
-            onClickDataHandler={onClickDataHandler}
+            onClickDataHandler={onClickCardHandler}
           />
         ) : (
           <p style={{ fontSize: '2rem' }}>
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
           </p>
         )}
+        <Pagination
+          responseInfo={searchData?.info}
+          currentPage={currentPage}
+          setPageHandler={setPageHandler}
+        />
       </div>
       <div ref={refCatalogDetailed} className="catalog-detailed">
         {isLoading ? (

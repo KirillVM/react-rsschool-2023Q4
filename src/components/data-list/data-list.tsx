@@ -10,11 +10,11 @@ type DataListProps = {
   response: RickAndMortyResponse;
   onClickDataHandler: (name: string) => void;
 };
-
 const DataList = ({
   response,
   onClickDataHandler,
 }: DataListProps): JSX.Element => {
+  console.log(response.info);
   return (
     <div className={'data-list-wrapper'}>
       {response.results.map(

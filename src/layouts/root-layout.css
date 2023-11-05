@@ -29,6 +29,7 @@
 
 .header-menu {
   display: flex;
+  height:20vh;
   gap: 3rem;
   justify-content:space-around;
   padding-right: 5rem;
