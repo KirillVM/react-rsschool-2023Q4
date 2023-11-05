@@ -1,8 +1,8 @@
 .data-list-wrapper {
   padding: 1rem;
   display: flex;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  /* overflow-y: scroll;
+  overflow-x: hidden; */
   flex-wrap: wrap;
   flex-grow: 1;
   justify-content: center;

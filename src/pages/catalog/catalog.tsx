@@ -100,22 +100,27 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     setNameDetailed('');
     handleParamsUpdate();
     setCurrentPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
   useLayoutEffect((): void => {
     handleParamsUpdate();
     getData(searchParams, currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, currentPage]);
   return (
     <>
       <div className="catalog-list">
-        <Button
-          className={['error-button']}
-          text={'errorThrow'}
-          type={'button'}
-          callBack={errorThrow}
-        />
+        <div>
+          <Button
+            className={['error-button']}
+            text={'errorThrow'}
+            type={'button'}
+            callBack={errorThrow}
+          />
+          <Pagination
+            responseInfo={searchData?.info}
+            currentPage={currentPage}
+            setPageHandler={setPageHandler}
+          />
+        </div>
         <SearchForm submitHandler={getData} />
         {isLoading ? (
           <Loader />
@@ -129,11 +134,6 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
           </p>
         )}
-        <Pagination
-          responseInfo={searchData?.info}
-          currentPage={currentPage}
-          setPageHandler={setPageHandler}
-        />
       </div>
       <div ref={refCatalogDetailed} className="catalog-detailed">
         {isLoading ? (
