@@ -1,6 +1,8 @@
 import { CardData, RickAndMortyResponseResult } from '../../../types/ram-types';
 import './detailed-data.css';
 import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 type DetailedDataProps = {
   responseResult: RickAndMortyResponseResult;
@@ -8,6 +10,21 @@ type DetailedDataProps = {
 
 const DetailedData = ({ responseResult }: DetailedDataProps): JSX.Element => {
   const cardData: CardData = getCardDataFromResponse(responseResult);
+  const location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+  const currentQueryParams = new URLSearchParams(location.search);
+
+  const handleParamsUpdate = (): void => {
+    currentQueryParams.set('id', responseResult.id.toString());
+    console.log(currentQueryParams);
+    const newSearch: string = `?${currentQueryParams}`;
+    navigate({ search: newSearch });
+  };
+
+  useEffect((): void => {
+    handleParamsUpdate();
+  }, []);
+
   return (
     <div className="detailed-data-wrapper">
       <img src={cardData.imageUrl} alt="img" className={'character-img'} />

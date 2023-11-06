@@ -22,6 +22,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
 
   const handleParamsUpdate = (): void => {
     currentQueryParams.set('name', searchParams);
+    currentQueryParams.set('page', currentPage.toString());
     console.log(currentQueryParams);
     const newSearch: string = `?${currentQueryParams}`;
     navigate({ search: newSearch });
@@ -35,7 +36,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const [searchData, setSearchData] = useState<RickAndMortyResponse | null>(
     null
   );
-  const [nameDetailed, setNameDetailed] = useState<string>('');
+  const [idDetailed, setIdDetailed] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const refCatalogDetailed = useRef<HTMLDivElement>(null);
@@ -79,7 +80,8 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     ) {
       refCatalogDetailed.current.setAttribute('style', 'display: none');
       document.removeEventListener('mousedown', handleDetailedCardClose);
-      setNameDetailed('');
+      setIdDetailed(0);
+      handleParamsUpdate();
     }
   };
 
@@ -87,17 +89,17 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     setCurrentPage(currentPage + num);
   };
 
-  const onClickCardHandler = (name: string): void => {
+  const onClickCardHandler = (id: number): void => {
     console.log('click');
-    if (!nameDetailed) {
+    if (!idDetailed) {
       document.addEventListener('mousedown', handleDetailedCardClose);
     }
-    setNameDetailed(name);
+    setIdDetailed(id);
     refCatalogDetailed.current?.setAttribute('style', 'display: flex');
   };
 
   useEffect((): void => {
-    setNameDetailed('');
+    setIdDetailed(0);
     handleParamsUpdate();
     setCurrentPage(1);
   }, [searchParams]);
@@ -138,11 +140,11 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
       <div ref={refCatalogDetailed} className="catalog-detailed">
         {isLoading ? (
           <Loader />
-        ) : searchData && nameDetailed ? (
+        ) : searchData && idDetailed ? (
           <DetailedData
             responseResult={
               searchData.results.filter(
-                (element) => element.name === nameDetailed
+                (element) => element.id === idDetailed
               )[0]
             }
           />

@@ -4,7 +4,7 @@ import { SyntheticEvent, useRef } from 'react';
 
 type DataProps = {
   responseResult: RickAndMortyResponseResult;
-  onClickDataHandler: (name: string) => void;
+  onClickDataHandler: (id: number) => void;
 };
 
 const Data = ({
@@ -13,7 +13,7 @@ const Data = ({
 }: DataProps): JSX.Element => {
   const handleCardClick = (e: SyntheticEvent): void => {
     e.preventDefault();
-    onClickDataHandler(responseResult.name);
+    onClickDataHandler(responseResult.id);
   };
   const refCard = useRef<HTMLDivElement>(null);
   const name = responseResult.name;

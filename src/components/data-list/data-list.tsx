@@ -8,13 +8,12 @@ import './data-list.css';
 
 type DataListProps = {
   response: RickAndMortyResponse;
-  onClickDataHandler: (name: string) => void;
+  onClickDataHandler: (id: number) => void;
 };
 const DataList = ({
   response,
   onClickDataHandler,
 }: DataListProps): JSX.Element => {
-  console.log(response.info);
   return (
     <div className={'data-list-wrapper'}>
       {response.results.map(
