@@ -1,22 +1,19 @@
 import { ReactNode } from 'react';
-import {
-  RickAndMortyResponse,
-  RickAndMortyResponseResult,
-} from '../../types/ram-types';
+import { RickAndMortyResponseResult } from '../../types/ram-types';
 import Data from './data/data';
 import './data-list.css';
 
 type DataListProps = {
-  response: RickAndMortyResponse;
+  responseResults: RickAndMortyResponseResult[];
   onClickDataHandler: (id: number) => void;
 };
 const DataList = ({
-  response,
+  responseResults,
   onClickDataHandler,
 }: DataListProps): JSX.Element => {
   return (
     <div className={'data-list-wrapper'}>
-      {response.results.map(
+      {responseResults.map(
         (element: RickAndMortyResponseResult, i: number): ReactNode => {
           return (
             <Data

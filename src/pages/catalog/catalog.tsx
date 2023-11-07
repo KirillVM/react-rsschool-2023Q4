@@ -8,8 +8,10 @@ import Button from '../../components/button/button';
 import DetailedData from '../../components/data-list/detailed-data/detailed-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '../../components/pagination/pagination';
+import sliceSearchData from '../../utils/slice-search-data';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
+const BASE_ITEM_PER_PAGE = 20;
 
 type CatalogProps = {
   type: string;
@@ -38,6 +40,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   );
   const [idDetailed, setIdDetailed] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemPerPage, setItemPerPage] = useState<number>(20);
 
   const refCatalogDetailed = useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
 
   const getData = async (
     name: string,
-    page: number = currentPage
+    page: number = Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE)
   ): Promise<void> => {
     setIsLoading(true);
     setTimeout(async (): Promise<void> => {
@@ -86,7 +89,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   };
 
   const setPageHandler = (num: number): void => {
-    setCurrentPage(currentPage + num);
+    num ? setCurrentPage(currentPage + num) : setCurrentPage(1);
   };
 
   const onClickCardHandler = (id: number): void => {
@@ -105,8 +108,11 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   }, [searchParams]);
   useLayoutEffect((): void => {
     handleParamsUpdate();
-    getData(searchParams, currentPage);
-  }, [searchParams, currentPage]);
+    getData(
+      searchParams,
+      Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE)
+    );
+  }, [searchParams, currentPage, itemPerPage]);
   return (
     <>
       <div className="catalog-list">
@@ -121,6 +127,9 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
             responseInfo={searchData?.info}
             currentPage={currentPage}
             setPageHandler={setPageHandler}
+            setItemPerPageHandler={(count: number): void =>
+              setItemPerPage(count)
+            }
           />
         </div>
         <SearchForm submitHandler={getData} />
@@ -128,7 +137,11 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
           <Loader />
         ) : searchData ? (
           <DataList
-            response={searchData}
+            responseResults={sliceSearchData(
+              searchData.results,
+              currentPage,
+              itemPerPage
+            )}
             onClickDataHandler={onClickCardHandler}
           />
         ) : (
