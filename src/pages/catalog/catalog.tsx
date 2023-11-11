@@ -21,6 +21,8 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const currentQueryParams = new URLSearchParams(location.search);
+  // const page: string | null = currentQueryParams.get('page');
+  // const name: string | null = currentQueryParams.get('name');
 
   const handleParamsUpdate = (): void => {
     currentQueryParams.set('name', searchParams);
@@ -101,11 +103,17 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     refCatalogDetailed.current?.setAttribute('style', 'display: flex');
   };
 
+  // useEffect((): void => {
+  //   if (page) setCurrentPage(+page);
+  //   if (name) setSearchParams(name);
+  // }, [page,name]);
+
   useEffect((): void => {
     setIdDetailed(0);
     handleParamsUpdate();
     setCurrentPage(1);
   }, [searchParams]);
+
   useLayoutEffect((): void => {
     handleParamsUpdate();
     getData(

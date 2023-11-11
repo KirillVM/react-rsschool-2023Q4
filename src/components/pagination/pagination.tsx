@@ -22,9 +22,7 @@ const Pagination = ({
   };
 
   const clickPrevHandler = (): void => {
-    if (responseInfo && responseInfo.prev) {
-      setPageHandler(-1);
-    }
+    if (responseInfo && responseInfo.prev) setPageHandler(-1);
   };
 
   const handelSelectChange = (e: ChangeEvent): void => {
