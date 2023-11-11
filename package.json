@@ -54,7 +54,7 @@
       "prettier --write",
       "npm run lint:fix"
     ],
-    "src/*.{ts,tsx}": "eslint --cache --fix",
-    "src/*.js": "eslint --cache --fix"
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.js": "eslint --cache --fix"
   }
 }
