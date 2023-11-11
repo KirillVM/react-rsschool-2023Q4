@@ -1,21 +1,20 @@
 import './pagination.css';
 import Button from '../button/button';
-import { RickAndMortyResponseinfo } from '../../types/ram-types';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useContext } from 'react';
+import { CatalogContext } from 'src/context/context';
 
 type PaginationProps = {
   currentPage: number;
   setPageHandler: (num: number) => void;
   setItemPerPageHandler: (count: number) => void;
-  responseInfo: RickAndMortyResponseinfo | undefined;
 };
 
 const Pagination = ({
   currentPage,
   setPageHandler,
   setItemPerPageHandler,
-  responseInfo,
 }: PaginationProps): JSX.Element => {
+  const responseInfo = useContext(CatalogContext).cardData?.info;
   const clickNextHandler = (): void => {
     console.log(responseInfo);
     if (responseInfo && responseInfo.next) setPageHandler(1);

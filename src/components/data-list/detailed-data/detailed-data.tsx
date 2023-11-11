@@ -2,14 +2,19 @@ import { CardData, RickAndMortyResponseResult } from '../../../types/ram-types';
 import './detailed-data.css';
 import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { CatalogContext } from 'src/context/context';
 
 type DetailedDataProps = {
-  responseResult: RickAndMortyResponseResult;
+  idDetailed: number;
 };
 
-const DetailedData = ({ responseResult }: DetailedDataProps): JSX.Element => {
-  const cardData: CardData = getCardDataFromResponse(responseResult);
+const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
+  const { cardData } = useContext(CatalogContext);
+  const responseResult = cardData?.results.find(
+    (element) => element.id === idDetailed
+  ) as RickAndMortyResponseResult;
+  const detailedCardData: CardData = getCardDataFromResponse(responseResult);
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const currentQueryParams = new URLSearchParams(location.search);
@@ -27,9 +32,13 @@ const DetailedData = ({ responseResult }: DetailedDataProps): JSX.Element => {
 
   return (
     <div className="detailed-data-wrapper">
-      <img src={cardData.imageUrl} alt="img" className={'character-img'} />
+      <img
+        src={detailedCardData.imageUrl}
+        alt="img"
+        className={'character-img'}
+      />
       <ul>
-        {Object.entries(cardData).map(
+        {Object.entries(detailedCardData).map(
           (data: [string, string]): JSX.Element | '' => {
             return data[0] !== 'imageUrl' ? (
               <li key={`${data[0]}${data[1]}`}>

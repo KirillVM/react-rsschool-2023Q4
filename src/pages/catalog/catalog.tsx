@@ -1,14 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import './catalog.css';
-import { RickAndMortyResponse } from '../../types/ram-types';
-import SearchForm from '../../components/search-form/search-form';
-import Loader from '../../components/loader/loader';
-import DataList from '../../components/data-list/data-list';
-import Button from '../../components/button/button';
-import DetailedData from '../../components/data-list/detailed-data/detailed-data';
+import { RickAndMortyResponse } from '@custom-types/ram-types';
+import SearchForm from '@components/search-form/search-form';
+import Loader from '@components/loader/loader';
+import DataList from '@components/data-list/data-list';
+import Button from '@components/button/button';
+import DetailedData from '@components/data-list/detailed-data/detailed-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-import Pagination from '../../components/pagination/pagination';
-import sliceSearchData from '../../utils/slice-search-data';
+import Pagination from '@components/pagination/pagination';
+import { CatalogContext } from 'src/context/context';
+
+import './catalog.css';
 
 const BASE_URL = 'https://rickandmortyapi.com/api';
 const BASE_ITEM_PER_PAGE = 20;
@@ -37,9 +38,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const [searchParams, setSearchParams] = useState<string>(
     localStorage.getItem('lastSearchRow') || ''
   );
-  const [searchData, setSearchData] = useState<RickAndMortyResponse | null>(
-    null
-  );
+  const [cardData, setCardData] = useState<RickAndMortyResponse | null>(null);
   const [idDetailed, setIdDetailed] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemPerPage, setItemPerPage] = useState<number>(20);
@@ -68,10 +67,10 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
       ).catch((error: Error): void => console.log(error));
       if (getResponse && getResponse.status === 200) {
         setSearchParams(name);
-        setSearchData(await getResponse.json());
+        setCardData(await getResponse.json());
         setIsLoading(false);
       } else {
-        setSearchData(null);
+        setCardData(null);
         setIsLoading(false);
       }
     }, 3000);
@@ -131,27 +130,27 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
             type={'button'}
             callBack={errorThrow}
           />
-          <Pagination
-            responseInfo={searchData?.info}
-            currentPage={currentPage}
-            setPageHandler={setPageHandler}
-            setItemPerPageHandler={(count: number): void =>
-              setItemPerPage(count)
-            }
-          />
+          <CatalogContext.Provider value={{ searchParams, cardData }}>
+            <Pagination
+              currentPage={currentPage}
+              setPageHandler={setPageHandler}
+              setItemPerPageHandler={(count: number): void =>
+                setItemPerPage(count)
+              }
+            />
+          </CatalogContext.Provider>
         </div>
         <SearchForm submitHandler={getData} />
         {isLoading ? (
           <Loader />
-        ) : searchData ? (
-          <DataList
-            responseResults={sliceSearchData(
-              searchData.results,
-              currentPage,
-              itemPerPage
-            )}
-            onClickDataHandler={onClickCardHandler}
-          />
+        ) : cardData ? (
+          <CatalogContext.Provider value={{ searchParams, cardData }}>
+            <DataList
+              currentPage={currentPage}
+              itemPerPage={itemPerPage}
+              onClickDataHandler={onClickCardHandler}
+            />
+          </CatalogContext.Provider>
         ) : (
           <p style={{ fontSize: '2rem' }}>
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
@@ -161,14 +160,10 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
       <div ref={refCatalogDetailed} className="catalog-detailed">
         {isLoading ? (
           <Loader />
-        ) : searchData && idDetailed ? (
-          <DetailedData
-            responseResult={
-              searchData.results.filter(
-                (element) => element.id === idDetailed
-              )[0]
-            }
-          />
+        ) : cardData && idDetailed ? (
+          <CatalogContext.Provider value={{ searchParams, cardData }}>
+            <DetailedData idDetailed={idDetailed} />
+          </CatalogContext.Provider>
         ) : (
           <p style={{ fontSize: '2rem' }}>
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER

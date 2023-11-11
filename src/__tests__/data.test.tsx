@@ -1,10 +1,13 @@
-// import { render, screen } from "@testing-library/react";
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 // import user from "@testing-library/user-event";
-// import Data from "@components/data-list/data/data";
+import Button from '@components/button/button';
+// import { RickAndMortyResponseResult } from "@custom-types/ram-types";
 
-describe("Catalog", () => {
+describe('Catalog', () => {
   test('firstr test', () => {
-    //expect(await screen.findByRole("button")).;
-    expect(1+1).toBe(2);
-  })
-})
+    render(<Button className={['button']} text={'but'} />);
+    expect(screen.getByText('but')).toHaveTextContent('but');
+    expect(screen.getByText('butt'));
+  });
+});
