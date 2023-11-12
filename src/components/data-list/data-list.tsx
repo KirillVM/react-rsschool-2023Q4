@@ -2,7 +2,7 @@ import { ReactNode, useContext } from 'react';
 import { RickAndMortyResponseResult } from '../../types/ram-types';
 import Data from './data/data';
 import './data-list.css';
-import { CatalogContext } from 'src/context/context';
+import { CatalogContext } from '@src/context/context';
 import sliceSearchData from '@utils/slice-search-data';
 
 type DataListProps = {
@@ -22,7 +22,6 @@ const DataList = ({
     currentPage,
     itemPerPage
   );
-
   return (
     <div className={'data-list-wrapper'}>
       {responseResults.map(
@@ -30,7 +29,9 @@ const DataList = ({
           return (
             <Data
               key={`${i}${element.name}`}
-              responseResult={element}
+              id={element.id}
+              name={element.name}
+              image={element.image}
               onClickDataHandler={onClickDataHandler}
             />
           );

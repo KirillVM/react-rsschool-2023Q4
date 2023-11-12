@@ -1,7 +1,7 @@
 import './pagination.css';
 import Button from '../button/button';
 import { ChangeEvent, useContext } from 'react';
-import { CatalogContext } from 'src/context/context';
+import { CatalogContext } from '@src/context/context';
 
 type PaginationProps = {
   currentPage: number;
@@ -16,7 +16,6 @@ const Pagination = ({
 }: PaginationProps): JSX.Element => {
   const responseInfo = useContext(CatalogContext).cardData?.info;
   const clickNextHandler = (): void => {
-    console.log(responseInfo);
     if (responseInfo && responseInfo.next) setPageHandler(1);
   };
 

@@ -1,4 +1,4 @@
-import { RickAndMortyResponseResult } from '../types/ram-types';
+import { RickAndMortyResponseResult } from '@src/types/ram-types';
 
 export default function (
   searchResult: RickAndMortyResponseResult[],

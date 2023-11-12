@@ -7,11 +7,11 @@ import Button from '@components/button/button';
 import DetailedData from '@components/data-list/detailed-data/detailed-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '@components/pagination/pagination';
-import { CatalogContext } from 'src/context/context';
+import { CatalogContext } from '@src/context/context';
 
 import './catalog.css';
+import { getResponse } from '@src/utils/get-response';
 
-const BASE_URL = 'https://rickandmortyapi.com/api';
 const BASE_ITEM_PER_PAGE = 20;
 
 type CatalogProps = {
@@ -28,7 +28,6 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const handleParamsUpdate = (): void => {
     currentQueryParams.set('name', searchParams);
     currentQueryParams.set('page', currentPage.toString());
-    console.log(currentQueryParams);
     const newSearch: string = `?${currentQueryParams}`;
     navigate({ search: newSearch });
   };
@@ -58,48 +57,45 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     page: number = Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE)
   ): Promise<void> => {
     setIsLoading(true);
-    setTimeout(async (): Promise<void> => {
-      const getResponse = await fetch(
-        `${BASE_URL}/${type}/?page=${page}&name=${name}`,
-        {
-          method: 'GET',
-        }
-      ).catch((error: Error): void => console.log(error));
-      if (getResponse && getResponse.status === 200) {
-        setSearchParams(name);
-        setCardData(await getResponse.json());
-        setIsLoading(false);
-      } else {
-        setCardData(null);
-        setIsLoading(false);
-      }
-    }, 3000);
+    const response: Response | void = await getResponse(type, page, name);
+    if (response && response.status === 200) {
+      setSearchParams(name);
+      setCardData(await response.json());
+      setIsLoading(false);
+    } else {
+      setCardData(null);
+      setIsLoading(false);
+    }
   };
 
   const handleDetailedCardClose = (event: Event): void => {
-    console.log(handleDetailedCardClose);
     if (
       refCatalogDetailed.current &&
       !refCatalogDetailed.current.contains(event.target as Node)
     ) {
-      refCatalogDetailed.current.setAttribute('style', 'display: none');
+      refCatalogDetailed.current.classList.remove('visible');
       document.removeEventListener('mousedown', handleDetailedCardClose);
       setIdDetailed(0);
       handleParamsUpdate();
     }
   };
 
+  const handleDetailedCardCloseButton = (): void => {
+    refCatalogDetailed.current?.classList.remove('visible');
+    document.removeEventListener('mousedown', handleDetailedCardClose);
+    setIdDetailed(0);
+    handleParamsUpdate();
+  };
   const setPageHandler = (num: number): void => {
     num ? setCurrentPage(currentPage + num) : setCurrentPage(1);
   };
 
   const onClickCardHandler = (id: number): void => {
-    console.log('click');
     if (!idDetailed) {
       document.addEventListener('mousedown', handleDetailedCardClose);
     }
     setIdDetailed(id);
-    refCatalogDetailed.current?.setAttribute('style', 'display: flex');
+    refCatalogDetailed.current?.classList.add('visible');
   };
 
   // useEffect((): void => {
@@ -157,13 +153,25 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
           </p>
         )}
       </div>
-      <div ref={refCatalogDetailed} className="catalog-detailed">
+      <div
+        data-testid="catalog-detailed"
+        ref={refCatalogDetailed}
+        className="catalog-detailed "
+      >
         {isLoading ? (
           <Loader />
         ) : cardData && idDetailed ? (
-          <CatalogContext.Provider value={{ searchParams, cardData }}>
-            <DetailedData idDetailed={idDetailed} />
-          </CatalogContext.Provider>
+          <>
+            <Button
+              dataTestid="close-card"
+              className={['close-detailed-button']}
+              text="X"
+              callBack={handleDetailedCardCloseButton}
+            />
+            <CatalogContext.Provider value={{ searchParams, cardData }}>
+              <DetailedData idDetailed={idDetailed} />
+            </CatalogContext.Provider>
+          </>
         ) : (
           <p style={{ fontSize: '2rem' }}>
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER

@@ -3,7 +3,7 @@ import './detailed-data.css';
 import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
-import { CatalogContext } from 'src/context/context';
+import { CatalogContext } from '@src/context/context';
 
 type DetailedDataProps = {
   idDetailed: number;
@@ -31,7 +31,7 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
   }, []);
 
   return (
-    <div className="detailed-data-wrapper">
+    <div data-testid="detailed-card" className="detailed-data-wrapper">
       <img
         src={detailedCardData.imageUrl}
         alt="img"
@@ -41,7 +41,7 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
         {Object.entries(detailedCardData).map(
           (data: [string, string]): JSX.Element | '' => {
             return data[0] !== 'imageUrl' ? (
-              <li key={`${data[0]}${data[1]}`}>
+              <li data-testid="detailed-card-name" key={`${data[0]}${data[1]}`}>
                 {`${data[0].charAt(0).toUpperCase() + data[0].slice(1)}: ${
                   data[1]
                 }`}

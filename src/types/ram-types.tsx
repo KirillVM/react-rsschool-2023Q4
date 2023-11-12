@@ -5,7 +5,7 @@ export interface RickAndMortyResponse {
 
 export interface RickAndMortyResponseinfo {
   count: number;
-  page: number;
+  pages: number;
   next: string | null;
   prev: string | null;
 }
