@@ -21,7 +21,6 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
 
   const handleParamsUpdate = (): void => {
     currentQueryParams.set('id', responseResult.id.toString());
-    console.log(currentQueryParams);
     const newSearch: string = `?${currentQueryParams}`;
     navigate({ search: newSearch });
   };

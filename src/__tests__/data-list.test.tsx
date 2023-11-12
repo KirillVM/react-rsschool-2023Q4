@@ -7,13 +7,6 @@ import { cardData } from '../types/card-data';
 
 global.fetch = jest.fn();
 
-// jest.mock("../utils/get-response", () => {
-//   return {
-//     convert: jest.fn().mockImplementation( async (): Promise<Response | void> => {
-//       return (Promise.resolve({status: 200, json: (): Promise<RickAndMortyResponse> => Promise.resolve(cardData)}) as unknown) as Response | void;
-//     }),
-//   };
-// });
 describe('DataList', () => {
   test('is specified number of cards', async (): Promise<void> => {
     (fetch as jest.Mock).mockImplementationOnce(() =>

@@ -1,5 +1,4 @@
 .error-button {
-  /* position: relative; */
   width: 22rem;
   margin-bottom: 2rem;
   height: 5rem;
@@ -23,7 +22,8 @@
   flex-direction: column;
   justify-content: center;
   width: 200vw;
-  padding-top: 3rem;
+  padding-top: 0.1rem;
+  padding-bottom: 3rem;
   background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
 }
 

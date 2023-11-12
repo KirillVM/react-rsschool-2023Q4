@@ -7,7 +7,6 @@ import Catalog from '@src/pages/catalog/catalog';
 import { MemoryRouter } from 'react-router-dom';
 import { cardData } from '../types/card-data';
 import { RickAndMortyResponse } from '@src/types/ram-types';
-// import { RickAndMortyResponseResult } from "@custom-types/ram-types";
 
 global.fetch = jest.fn();
 

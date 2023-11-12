@@ -16,8 +16,6 @@
 .button:hover {
   background-color: #35c9dd;
   box-shadow: 0 0 20px 0 #308d99;
-
-  /* border-color: black; */
 }
 
 button:focus,
