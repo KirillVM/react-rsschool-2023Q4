@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -36,7 +36,7 @@ describe('searchForm', (): void => {
     );
     const searchInput: HTMLButtonElement =
       await screen.findByPlaceholderText('Search');
-    searchInput.value = 'Mock value';
+    await fireEvent.change(searchInput, { target: { value: 'Mock value' } });
     const submitButton: HTMLButtonElement = await screen.findByText('Search');
     await user.click(submitButton);
     await waitFor(() => {
