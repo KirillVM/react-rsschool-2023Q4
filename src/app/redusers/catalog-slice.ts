@@ -1,9 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { cardData } from '@src/types/card-data';
-import { RickAndMortyResponse } from '@src/types/ram-types';
+import { CardData, RickAndMortyResponse } from '@src/types/ram-types';
+import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
 
 interface CatalogState {
   data: RickAndMortyResponse;
+  detailedData: CardData;
   searchParams: string;
   pageNumber: number;
   itemPerPage: number;
@@ -11,6 +13,7 @@ interface CatalogState {
 
 const initialState: CatalogState = {
   data: cardData,
+  detailedData: getCardDataFromResponse(cardData.results[1]),
   searchParams: localStorage.getItem('lastSearchRow') || '',
   pageNumber: 1,
   itemPerPage: 20,
@@ -38,6 +41,9 @@ const catalogSlice = createSlice({
     setItemPerPage(state, action: PayloadAction<number>) {
       state.itemPerPage = action.payload;
     },
+    setDetailedCardData(state, action: PayloadAction<CardData>) {
+      state.detailedData = action.payload;
+    },
   },
 });
 
@@ -48,5 +54,6 @@ export const {
   setPageNumber,
   setSearchParams,
   setItemPerPage,
+  setDetailedCardData,
 } = catalogSlice.actions;
 export default catalogSlice.reducer;

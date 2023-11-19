@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import SearchForm from '@components/search-form/search-form';
-import Loader from '@components/loader/loader';
 import DataList from '@components/data-list/data-list';
 import Button from '@components/button/button';
 import DetailedData from '@components/data-list/detailed-data/detailed-data';
@@ -8,22 +7,11 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '@components/pagination/pagination';
 
 import './catalog.css';
-import { useGetCharactersQuery } from '@src/app/ramApi/ram-api';
-import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
-import { setCardData } from '@src/app/redusers/catalog-slice';
+import { useAppSelector } from '@src/app/hooks/hooks';
 
 const Catalog = (): JSX.Element => {
-  const dispatch = useAppDispatch();
   const searchParams = useAppSelector((state) => state.catalog.searchParams);
   const currentPage = useAppSelector((state) => state.catalog.pageNumber);
-  const { data, isLoading, isFetching } = useGetCharactersQuery({
-    itemName: searchParams,
-    page: currentPage.toString(),
-  });
-  useEffect(() => {
-    data && dispatch(setCardData(data));
-  }, [data, dispatch]);
-  const cardData = useAppSelector((state) => state.catalog.data);
 
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
@@ -84,7 +72,7 @@ const Catalog = (): JSX.Element => {
 
   useLayoutEffect((): void => {
     handleParamsUpdate();
-  }, [searchParams, currentPage, handleParamsUpdate]);
+  }, [searchParams, currentPage]);
 
   return (
     <>
@@ -99,24 +87,14 @@ const Catalog = (): JSX.Element => {
           <Pagination />
         </div>
         <SearchForm />
-        {isLoading || isFetching ? (
-          <Loader />
-        ) : cardData ? (
-          <DataList onClickDataHandler={onClickCardHandler} />
-        ) : (
-          <p style={{ fontSize: '2rem' }}>
-            NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
-          </p>
-        )}
+        <DataList onClickDataHandler={onClickCardHandler} />
       </div>
       <div
         data-testid="catalog-detailed"
         ref={refCatalogDetailed}
         className="catalog-detailed "
       >
-        {isLoading || isFetching ? (
-          <Loader />
-        ) : cardData && idDetailed ? (
+        {idDetailed ? (
           <>
             <Button
               dataTestid="close-card"

@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { BASE_URL } from '@src/constants/constants';
-import { RickAndMortyResponse } from '@src/types/ram-types';
+import {
+  RickAndMortyResponse,
+  RickAndMortyResponseResult,
+} from '@src/types/ram-types';
 
 export const ramApi = createApi({
   reducerPath: 'ramApi',
@@ -10,7 +13,10 @@ export const ramApi = createApi({
       query: ({ itemName = '', page = '1' }) =>
         `character?name=${itemName}&page=${page}`,
     }),
+    getCharactersById: build.query<RickAndMortyResponseResult, string>({
+      query: (id = '1') => `/character/${id}`,
+    }),
   }),
 });
 
-export const { useGetCharactersQuery } = ramApi;
+export const { useGetCharactersQuery, useGetCharactersByIdQuery } = ramApi;
