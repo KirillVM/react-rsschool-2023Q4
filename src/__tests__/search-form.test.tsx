@@ -3,6 +3,8 @@ import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import SearchForm from '@src/components/search-form/search-form';
+import { Provider } from 'react-redux';
+import { store } from '@app/store/store';
 
 // global.fetch = jest.fn();
 
@@ -19,19 +21,21 @@ import SearchForm from '@src/components/search-form/search-form';
 
 describe('searchForm', (): void => {
   test('is correctly displays the detailed card data', async (): Promise<void> => {
-    const submitHandler = jest.fn();
-    const store: Record<string, string> = {};
+    // const submitHandler = jest.fn();
+    const storage: Record<string, string> = {};
     global.Storage.prototype.getItem = jest.fn((key: string): string | null => {
-      return store[key] || null;
+      return storage[key] || null;
     });
     global.Storage.prototype.setItem = jest.fn(
       (key: string, value: string): void => {
-        store[key] = value;
+        storage[key] = value;
       }
     );
     render(
       <MemoryRouter>
-        <SearchForm submitHandler={submitHandler} />
+        <Provider store={store}>
+          <SearchForm />
+        </Provider>
       </MemoryRouter>
     );
     const searchInput: HTMLButtonElement =
@@ -42,6 +46,6 @@ describe('searchForm', (): void => {
     await waitFor(() => {
       expect(global.Storage.prototype.setItem).toHaveBeenCalled();
     });
-    expect(store['lastSearchRow']).toEqual('Mock value');
+    expect(storage['lastSearchRow']).toEqual('Mock value');
   });
 });

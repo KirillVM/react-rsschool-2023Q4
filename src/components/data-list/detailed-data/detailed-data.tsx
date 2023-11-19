@@ -2,19 +2,20 @@ import { CardData, RickAndMortyResponseResult } from '../../../types/ram-types';
 import './detailed-data.css';
 import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
-import { CatalogContext } from '@src/context/context';
+import { useEffect } from 'react';
+import { useAppSelector } from '@src/app/hooks/hooks';
 
 type DetailedDataProps = {
   idDetailed: number;
 };
 
 const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
-  const { cardData } = useContext(CatalogContext);
-  const responseResult = cardData?.results.find(
+  const cardData = useAppSelector((state) => state.catalog.data);
+  const responseResult: RickAndMortyResponseResult = cardData?.results.find(
     (element) => element.id === idDetailed
   ) as RickAndMortyResponseResult;
   const detailedCardData: CardData = getCardDataFromResponse(responseResult);
+
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const currentQueryParams = new URLSearchParams(location.search);
@@ -27,7 +28,7 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
 
   useEffect((): void => {
     handleParamsUpdate();
-  }, []);
+  }, [handleParamsUpdate]);
 
   return (
     <div data-testid="detailed-card" className="detailed-data-wrapper">

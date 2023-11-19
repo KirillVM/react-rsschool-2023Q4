@@ -1,24 +1,20 @@
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { RickAndMortyResponseResult } from '../../types/ram-types';
 import Data from './data/data';
 import './data-list.css';
-import { CatalogContext } from '@src/context/context';
 import sliceSearchData from '@utils/slice-search-data';
+import { useAppSelector } from '@src/app/hooks/hooks';
 
 type DataListProps = {
-  currentPage: number;
-  itemPerPage: number;
   onClickDataHandler: (id: number) => void;
 };
 
-const DataList = ({
-  currentPage,
-  itemPerPage,
-  onClickDataHandler,
-}: DataListProps): JSX.Element => {
-  const { cardData } = useContext(CatalogContext);
+const DataList = ({ onClickDataHandler }: DataListProps): JSX.Element => {
+  const cardData = useAppSelector((state) => state.catalog.data);
+  const currentPage = useAppSelector((state) => state.catalog.pageNumber);
+  const itemPerPage = useAppSelector((state) => state.catalog.itemPerPage);
   const responseResults = sliceSearchData(
-    cardData?.results as RickAndMortyResponseResult[],
+    cardData?.results,
     currentPage,
     itemPerPage
   );

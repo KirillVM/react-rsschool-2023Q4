@@ -1,7 +1,7 @@
-export interface RickAndMortyResponse {
+export type RickAndMortyResponse = {
   info: RickAndMortyResponseinfo;
   results: RickAndMortyResponseResult[];
-}
+};
 
 export interface RickAndMortyResponseinfo {
   count: number;

@@ -1,24 +1,30 @@
 import { SyntheticEvent, useState } from 'react';
 import Button from '../button/button';
 import './search-form.css';
+import { useAppDispatch } from '@src/app/hooks/hooks';
+import {
+  setPageNumber,
+  setSearchParams,
+} from '@src/app/redusers/catalog-slice';
 
-type SearchProps = {
-  submitHandler: (name: string) => Promise<void>;
-};
-
-const SearchForm = ({ submitHandler }: SearchProps): JSX.Element => {
+const SearchForm = (): JSX.Element => {
   const [value, setValue] = useState<string>(
     localStorage.getItem('lastSearchRow') || ''
   );
+  const dispatch = useAppDispatch();
 
   const handleChange = (event: SyntheticEvent): void => {
     setValue((event.target as HTMLInputElement).value);
   };
 
-  const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
+  const handleSubmit = (event: SyntheticEvent): void => {
     event.preventDefault();
+  };
+
+  const handleSubmitButtonClick = (): void => {
     localStorage.setItem('lastSearchRow', value);
-    await submitHandler(value);
+    dispatch(setPageNumber(1));
+    dispatch(setSearchParams(value));
   };
 
   return (
@@ -33,7 +39,12 @@ const SearchForm = ({ submitHandler }: SearchProps): JSX.Element => {
           onChange={handleChange}
         ></input>
       </label>
-      <Button className={['search-button']} type={'submit'} text={'Search'} />
+      <Button
+        className={['search-button']}
+        type={'submit'}
+        text={'Search'}
+        callBack={handleSubmitButtonClick}
+      />
     </form>
   );
 };

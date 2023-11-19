@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { RickAndMortyResponse } from '@custom-types/ram-types';
 import SearchForm from '@components/search-form/search-form';
 import Loader from '@components/loader/loader';
 import DataList from '@components/data-list/data-list';
@@ -7,23 +6,28 @@ import Button from '@components/button/button';
 import DetailedData from '@components/data-list/detailed-data/detailed-data';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '@components/pagination/pagination';
-import { CatalogContext } from '@src/context/context';
 
 import './catalog.css';
-import { getResponse } from '@src/utils/get-response';
+import { useGetCharactersQuery } from '@src/app/ramApi/ram-api';
+import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
+import { setCardData } from '@src/app/redusers/catalog-slice';
 
-const BASE_ITEM_PER_PAGE = 20;
+const Catalog = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const searchParams = useAppSelector((state) => state.catalog.searchParams);
+  const currentPage = useAppSelector((state) => state.catalog.pageNumber);
+  const { data, isLoading, isFetching } = useGetCharactersQuery({
+    itemName: searchParams,
+    page: currentPage.toString(),
+  });
+  useEffect(() => {
+    data && dispatch(setCardData(data));
+  }, [data, dispatch]);
+  const cardData = useAppSelector((state) => state.catalog.data);
 
-type CatalogProps = {
-  type: string;
-};
-
-const Catalog = ({ type }: CatalogProps): JSX.Element => {
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const currentQueryParams = new URLSearchParams(location.search);
-  // const page: string | null = currentQueryParams.get('page');
-  // const name: string | null = currentQueryParams.get('name');
 
   const handleParamsUpdate = (): void => {
     currentQueryParams.set('name', searchParams);
@@ -33,39 +37,18 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
   };
 
   const [isError, setIsError] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useState<string>(
-    localStorage.getItem('lastSearchRow') || ''
-  );
-  const [cardData, setCardData] = useState<RickAndMortyResponse | null>(null);
+  useEffect(() => {
+    if (isError) {
+      throw new Error('My Error');
+    }
+  }, [isError]);
+
   const [idDetailed, setIdDetailed] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemPerPage, setItemPerPage] = useState<number>(20);
 
   const refCatalogDetailed = useRef<HTMLDivElement>(null);
 
-  if (isError) {
-    throw new Error('My Error');
-  }
-
   const errorThrow = (): void => {
     setIsError(true);
-  };
-
-  const getData = async (
-    name: string,
-    page: number = Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE)
-  ): Promise<void> => {
-    setIsLoading(true);
-    const response: Response | void = await getResponse(type, page, name);
-    if (response && response.status === 200) {
-      setSearchParams(name);
-      setCardData(await response.json());
-      setIsLoading(false);
-    } else {
-      setCardData(null);
-      setIsLoading(false);
-    }
   };
 
   const handleDetailedCardClose = (event: Event): void => {
@@ -86,9 +69,6 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     setIdDetailed(0);
     handleParamsUpdate();
   };
-  const setPageHandler = (num: number): void => {
-    num ? setCurrentPage(currentPage + num) : setCurrentPage(1);
-  };
 
   const onClickCardHandler = (id: number): void => {
     if (!idDetailed) {
@@ -98,24 +78,14 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
     refCatalogDetailed.current?.classList.add('visible');
   };
 
-  // useEffect((): void => {
-  //   if (page) setCurrentPage(+page);
-  //   if (name) setSearchParams(name);
-  // }, [page,name]);
-
   useEffect((): void => {
     setIdDetailed(0);
-    handleParamsUpdate();
-    setCurrentPage(1);
   }, [searchParams]);
 
   useLayoutEffect((): void => {
     handleParamsUpdate();
-    getData(
-      searchParams,
-      Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE)
-    );
-  }, [searchParams, currentPage, itemPerPage]);
+  }, [searchParams, currentPage, handleParamsUpdate]);
+
   return (
     <>
       <div className="catalog-list">
@@ -126,27 +96,13 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
             type={'button'}
             callBack={errorThrow}
           />
-          <CatalogContext.Provider value={{ searchParams, cardData }}>
-            <Pagination
-              currentPage={currentPage}
-              setPageHandler={setPageHandler}
-              setItemPerPageHandler={(count: number): void =>
-                setItemPerPage(count)
-              }
-            />
-          </CatalogContext.Provider>
+          <Pagination />
         </div>
-        <SearchForm submitHandler={getData} />
-        {isLoading ? (
+        <SearchForm />
+        {isLoading || isFetching ? (
           <Loader />
         ) : cardData ? (
-          <CatalogContext.Provider value={{ searchParams, cardData }}>
-            <DataList
-              currentPage={currentPage}
-              itemPerPage={itemPerPage}
-              onClickDataHandler={onClickCardHandler}
-            />
-          </CatalogContext.Provider>
+          <DataList onClickDataHandler={onClickCardHandler} />
         ) : (
           <p style={{ fontSize: '2rem' }}>
             NO DATA. PLEASE INSERT ANOTHER SEARCH PARAMETHER
@@ -158,7 +114,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
         ref={refCatalogDetailed}
         className="catalog-detailed "
       >
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <Loader />
         ) : cardData && idDetailed ? (
           <>
@@ -168,9 +124,7 @@ const Catalog = ({ type }: CatalogProps): JSX.Element => {
               text="X"
               callBack={handleDetailedCardCloseButton}
             />
-            <CatalogContext.Provider value={{ searchParams, cardData }}>
-              <DetailedData idDetailed={idDetailed} />
-            </CatalogContext.Provider>
+            <DetailedData idDetailed={idDetailed} />
           </>
         ) : (
           <p style={{ fontSize: '2rem' }}>

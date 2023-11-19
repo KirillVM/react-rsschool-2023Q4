@@ -1,10 +1,11 @@
+import { SyntheticEvent } from 'react';
 import './button.css';
 
 type ButtonProps = {
   className: string[];
   text: string;
   type?: 'submit' | 'button' | 'reset' | undefined;
-  callBack?: () => void;
+  callBack?: (event: SyntheticEvent) => void;
   dataTestid?: string;
 };
 

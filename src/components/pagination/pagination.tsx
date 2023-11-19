@@ -1,31 +1,38 @@
 import './pagination.css';
 import Button from '../button/button';
-import { ChangeEvent, useContext } from 'react';
-import { CatalogContext } from '@src/context/context';
+import { ChangeEvent } from 'react';
+import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
+import {
+  incPageNumber,
+  decPageNumber,
+  setItemPerPage,
+  setPageNumber,
+} from '@src/app/redusers/catalog-slice';
 
-type PaginationProps = {
-  currentPage: number;
-  setPageHandler: (num: number) => void;
-  setItemPerPageHandler: (count: number) => void;
-};
+// Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE);
 
-const Pagination = ({
-  currentPage,
-  setPageHandler,
-  setItemPerPageHandler,
-}: PaginationProps): JSX.Element => {
-  const responseInfo = useContext(CatalogContext).cardData?.info;
+// type PaginationProps = {
+//   currentPage: number;
+//   setPageHandler: (num: number) => void;
+//   setItemPerPageHandler: (count: number) => void;
+// };
+
+const Pagination = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const responseInfo = useAppSelector((state) => state.catalog.data.info);
+  const currentPage = useAppSelector((state) => state.catalog.pageNumber);
+
   const clickNextHandler = (): void => {
-    if (responseInfo && responseInfo.next) setPageHandler(1);
+    if (responseInfo && responseInfo.next) dispatch(incPageNumber());
   };
 
   const clickPrevHandler = (): void => {
-    if (responseInfo && responseInfo.prev) setPageHandler(-1);
+    if (responseInfo && responseInfo.prev) dispatch(decPageNumber());
   };
 
   const handelSelectChange = (e: ChangeEvent): void => {
-    setPageHandler(0);
-    setItemPerPageHandler(+(e.target as HTMLSelectElement).value);
+    dispatch(setPageNumber(1));
+    dispatch(setItemPerPage(+(e.target as HTMLSelectElement).value));
   };
 
   return (

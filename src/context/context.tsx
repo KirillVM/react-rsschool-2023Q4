@@ -7,7 +7,7 @@ import { createContext } from 'react';
 
 interface ICatalogContext {
   searchParams: string;
-  cardData: RickAndMortyResponse | null;
+  data: RickAndMortyResponse | undefined;
 }
 
 const initialCardData: RickAndMortyResponse = {
@@ -17,5 +17,5 @@ const initialCardData: RickAndMortyResponse = {
 
 export const CatalogContext = createContext<ICatalogContext>({
   searchParams: localStorage.getItem('lastSearchRow') || '',
-  cardData: initialCardData as RickAndMortyResponse | null,
+  data: initialCardData as RickAndMortyResponse | undefined,
 });

@@ -1,6 +1,6 @@
 import { RickAndMortyResponseResult } from '@src/types/ram-types';
 
-export default function (
+export default function sliceSearchData(
   searchResult: RickAndMortyResponseResult[],
   currentPage: number,
   itemPerPage: number
