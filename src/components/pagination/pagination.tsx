@@ -9,14 +9,6 @@ import {
   setPageNumber,
 } from '@src/app/redusers/catalog-slice';
 
-// Math.ceil((currentPage * itemPerPage) / BASE_ITEM_PER_PAGE);
-
-// type PaginationProps = {
-//   currentPage: number;
-//   setPageHandler: (num: number) => void;
-//   setItemPerPageHandler: (count: number) => void;
-// };
-
 const Pagination = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const responseInfo = useAppSelector((state) => state.catalog.data.info);

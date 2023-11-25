@@ -1,28 +1,37 @@
+import 'whatwg-fetch';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
 import Catalog from '@src/pages/catalog/catalog';
 import { MemoryRouter } from 'react-router-dom';
 import { cardData } from '@src/types/card-data';
-import { RickAndMortyResponse } from '@src/types/ram-types';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import { CatalogState } from '@src/app/redusers/catalog-slice';
+import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
+import thunk from 'redux-thunk';
 
-global.fetch = jest.fn();
+const middleware = [thunk];
+const mockStore = configureStore(middleware);
+const initialState: CatalogState = {
+  data: cardData,
+  detailedData: getCardDataFromResponse(cardData.results[1]),
+  searchParams: '',
+  pageNumber: 1,
+  itemPerPage: 20,
+  isDetailedLoading: false,
+  isCatalogLoading: false,
+};
+
+const currentMockStore = mockStore(initialState);
 
 describe('detailData', (): void => {
   test('is correctly displays the detailed card data', async (): Promise<void> => {
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        status: 200,
-        json: (): Promise<RickAndMortyResponse> =>
-          Promise.resolve({
-            info: cardData.info,
-            results: [cardData.results[1]],
-          }),
-      })
-    );
     render(
       <MemoryRouter>
-        <Catalog type={'character'} />
+        <Provider store={currentMockStore}>
+          <Catalog />
+        </Provider>
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getAllByTestId('card')).toHaveLength(1));
@@ -40,19 +49,11 @@ describe('detailData', (): void => {
   });
 
   test('is clicking the close button hides the component', async (): Promise<void> => {
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        status: 200,
-        json: (): Promise<RickAndMortyResponse> =>
-          Promise.resolve({
-            info: cardData.info,
-            results: [cardData.results[1]],
-          }),
-      })
-    );
     render(
       <MemoryRouter>
-        <Catalog type={'character'} />
+        <Provider store={currentMockStore}>
+          <Catalog />
+        </Provider>
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getAllByTestId('card')).toHaveLength(1));

@@ -1,23 +1,29 @@
+import 'whatwg-fetch';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
 import { MemoryRouter } from 'react-router-dom';
 import SearchForm from '@src/components/search-form/search-form';
 import { Provider } from 'react-redux';
-import { store } from '@app/store/store';
+import { cardData } from '@src/types/card-data';
+import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
+import { CatalogState } from '@src/app/redusers/catalog-slice';
+import thunk from 'redux-thunk';
 
-// global.fetch = jest.fn();
+const middleware = [thunk];
+const mockStore = configureStore(middleware);
+const initialState: CatalogState = {
+  data: cardData,
+  detailedData: getCardDataFromResponse(cardData.results[1]),
+  searchParams: '',
+  pageNumber: 1,
+  itemPerPage: 20,
+  isDetailedLoading: false,
+  isCatalogLoading: false,
+};
 
-// (fetch as jest.Mock).mockImplementationOnce(() =>
-// Promise.resolve({
-//   status: 200,
-//   json: (): Promise<RickAndMortyResponse> =>
-//     Promise.resolve({
-//       info: cardData.info,
-//       results: [cardData.results[1]],
-//     }),
-// })
-// );
+const currentMockStore = mockStore(initialState);
 
 describe('searchForm', (): void => {
   test('is correctly displays the detailed card data', async (): Promise<void> => {
@@ -33,7 +39,7 @@ describe('searchForm', (): void => {
     );
     render(
       <MemoryRouter>
-        <Provider store={store}>
+        <Provider store={currentMockStore}>
           <SearchForm />
         </Provider>
       </MemoryRouter>

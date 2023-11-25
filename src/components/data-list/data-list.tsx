@@ -5,7 +5,10 @@ import './data-list.css';
 import sliceSearchData from '@utils/slice-search-data';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
 import { useGetCharactersQuery } from '@src/app/ramApi/ram-api';
-import { setCardData } from '@src/app/redusers/catalog-slice';
+import {
+  setCardData,
+  setIsLoadingCatalog,
+} from '@src/app/redusers/catalog-slice';
 import Loader from '../loader/loader';
 
 type DataListProps = {
@@ -23,6 +26,10 @@ const DataList = ({ onClickDataHandler }: DataListProps): JSX.Element => {
     itemName: searchParams,
     page: currentPage.toString(),
   });
+  useEffect(() => {
+    dispatch(setIsLoadingCatalog(isLoading));
+  }, [isLoading, dispatch]);
+
   useEffect(() => {
     data && dispatch(setCardData(data));
   }, [data, dispatch]);

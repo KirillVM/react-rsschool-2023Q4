@@ -5,7 +5,10 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useGetCharactersByIdQuery } from '@src/app/ramApi/ram-api';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
-import { setDetailedCardData } from '@src/app/redusers/catalog-slice';
+import {
+  setDetailedCardData,
+  setIsLoadingDetailed,
+} from '@src/app/redusers/catalog-slice';
 import Loader from '@src/components/loader/loader';
 
 type DetailedDataProps = {
@@ -17,6 +20,10 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
   const { data, isLoading, isFetching, isError } = useGetCharactersByIdQuery(
     idDetailed.toString()
   );
+
+  useEffect(() => {
+    dispatch(setIsLoadingDetailed(isLoading));
+  }, [isLoading, dispatch]);
   useEffect(() => {
     data && dispatch(setDetailedCardData(getCardDataFromResponse(data)));
   }, [data]);
@@ -24,7 +31,7 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
   const detailedCardData: CardData = useAppSelector(
     (state) => state.catalog.detailedData
   );
-  console.log(detailedCardData);
+
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const currentQueryParams = new URLSearchParams(location.search);

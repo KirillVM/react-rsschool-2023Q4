@@ -1,20 +1,37 @@
+import 'whatwg-fetch';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
 import Catalog from '@src/pages/catalog/catalog';
 import { MemoryRouter } from 'react-router-dom';
 import { cardData } from '../types/card-data';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
+import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
+import { CatalogState } from '@src/app/redusers/catalog-slice';
 
-global.fetch = jest.fn();
+const middleware = [thunk];
+const mockStore = configureStore(middleware);
+const initialState: CatalogState = {
+  data: cardData,
+  detailedData: getCardDataFromResponse(cardData.results[1]),
+  searchParams: '',
+  pageNumber: 1,
+  itemPerPage: 20,
+  isDetailedLoading: false,
+  isCatalogLoading: false,
+};
+
+const currentMockStore = mockStore(initialState);
 
 describe('DataList', () => {
   test('is specified number of cards', async (): Promise<void> => {
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({ status: 200, json: () => Promise.resolve(cardData) })
-    );
     const { findByRole, findAllByRole } = render(
       <MemoryRouter>
-        <Catalog type={'character'} />
+        <Provider store={currentMockStore}>
+          <Catalog />
+        </Provider>
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getAllByTestId('card')).toHaveLength(5));
@@ -23,9 +40,6 @@ describe('DataList', () => {
 
     let combobox = screen.getByRole('combobox');
     user.selectOptions(combobox, '5');
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({ status: 200, json: () => Promise.resolve(cardData) })
-    );
     await waitFor(() =>
       expect(
         (screen.getByRole('option', { name: '5' }) as HTMLOptionElement)

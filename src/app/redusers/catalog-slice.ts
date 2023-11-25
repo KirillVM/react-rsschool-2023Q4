@@ -3,12 +3,14 @@ import { cardData } from '@src/types/card-data';
 import { CardData, RickAndMortyResponse } from '@src/types/ram-types';
 import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
 
-interface CatalogState {
+export interface CatalogState {
   data: RickAndMortyResponse;
   detailedData: CardData;
   searchParams: string;
   pageNumber: number;
   itemPerPage: number;
+  isDetailedLoading: boolean;
+  isCatalogLoading: boolean;
 }
 
 const initialState: CatalogState = {
@@ -17,6 +19,8 @@ const initialState: CatalogState = {
   searchParams: localStorage.getItem('lastSearchRow') || '',
   pageNumber: 1,
   itemPerPage: 20,
+  isDetailedLoading: false,
+  isCatalogLoading: false,
 };
 
 const catalogSlice = createSlice({
@@ -44,6 +48,12 @@ const catalogSlice = createSlice({
     setDetailedCardData(state, action: PayloadAction<CardData>) {
       state.detailedData = action.payload;
     },
+    setIsLoadingDetailed(state, action: PayloadAction<boolean>) {
+      state.isDetailedLoading = action.payload;
+    },
+    setIsLoadingCatalog(state, action: PayloadAction<boolean>) {
+      state.isCatalogLoading = action.payload;
+    },
   },
 });
 
@@ -55,5 +65,7 @@ export const {
   setSearchParams,
   setItemPerPage,
   setDetailedCardData,
+  setIsLoadingDetailed,
+  setIsLoadingCatalog,
 } = catalogSlice.actions;
 export default catalogSlice.reducer;

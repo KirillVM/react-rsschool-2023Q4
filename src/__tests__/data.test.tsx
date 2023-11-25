@@ -1,3 +1,4 @@
+import 'whatwg-fetch';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import user from '@testing-library/user-event';
@@ -6,9 +7,25 @@ import Data from '@components/data-list/data/data';
 import Catalog from '@src/pages/catalog/catalog';
 import { MemoryRouter } from 'react-router-dom';
 import { cardData } from '../types/card-data';
-import { RickAndMortyResponse } from '@src/types/ram-types';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
+import { getCardDataFromResponse } from '@src/utils/get-narrow-data';
+import { CatalogState } from '@src/app/redusers/catalog-slice';
 
-global.fetch = jest.fn();
+const middleware = [thunk];
+const mockStore = configureStore(middleware);
+const initialState: CatalogState = {
+  data: cardData,
+  detailedData: getCardDataFromResponse(cardData.results[1]),
+  searchParams: '',
+  pageNumber: 1,
+  itemPerPage: 20,
+  isDetailedLoading: false,
+  isCatalogLoading: false,
+};
+
+const currentMockStore = mockStore(initialState);
 
 describe('Button', (): void => {
   test('button test', (): void => {
@@ -33,19 +50,11 @@ describe('Data', (): void => {
   });
 
   test('is clicking on a card opens a detailed card component', async (): Promise<void> => {
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        status: 200,
-        json: (): Promise<RickAndMortyResponse> =>
-          Promise.resolve({
-            info: cardData.info,
-            results: [cardData.results[1]],
-          }),
-      })
-    );
     render(
       <MemoryRouter>
-        <Catalog type={'character'} />
+        <Provider store={currentMockStore}>
+          <Catalog />
+        </Provider>
       </MemoryRouter>
     );
     await waitFor(() => expect(screen.getAllByTestId('card')).toHaveLength(1));
