@@ -59,13 +59,5 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-tsconfig-paths": "^4.2.1"
-  },
-  "lint-staged": {
-    "src/*.{js,ts,jsx,tsx}": [
-      "prettier --write",
-      "npm run lint:fix"
-    ],
-    "*.{ts,tsx}": "eslint --cache --fix",
-    "*.js": "eslint --cache --fix"
   }
 }
