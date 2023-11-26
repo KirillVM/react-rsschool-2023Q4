@@ -1,23 +1,30 @@
-import './root-layout.css';
-import { NavLink, Outlet } from 'react-router-dom';
 
-const RootLayout = (): JSX.Element => {
+import { Inter } from 'next/font/google';
+import './root-layout.css';
+import Link from 'next/link';
+type LayoutProps = {
+  children: JSX.Element;
+}
+
+const inter = Inter({ subsets: ['latin'] })
+
+const RootLayout = ({children}: LayoutProps ): JSX.Element => {
   return (
     <div className="root-layout-wrapper">
       <header className="root-header">
         <nav>
           <h1>Rick and Morty WORLD</h1>
           <div className="header-menu">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="characters">Characters</NavLink>
-            <NavLink to="locations">Locations</NavLink>
-            <NavLink to="episodes">Episodes</NavLink>
-            <NavLink to="about">About</NavLink>
+            <Link href="/">Home</Link>
+            <Link href="/catalog/characters">Characters</Link>
+            <Link href="/locations">Locations</Link>
+            <Link href="/episodes">Episodes</Link>
+            <Link href="/about">About</Link>
           </div>
         </nav>
       </header>
       <main className="root-layout-main">
-        <Outlet />
+        {children}
       </main>
     </div>
   );

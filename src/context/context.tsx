@@ -16,6 +16,6 @@ const initialCardData: RickAndMortyResponse = {
 };
 
 export const CatalogContext = createContext<ICatalogContext>({
-  searchParams: localStorage.getItem('lastSearchRow') || '',
+  searchParams: /*localStorage.getItem('lastSearchRow') ||*/ '',
   data: initialCardData as RickAndMortyResponse | undefined,
 });

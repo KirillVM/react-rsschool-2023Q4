@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   extends: [
+    'extends: next/core-web-vitals',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',

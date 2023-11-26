@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { ramApi } from '../ramApi/ram-api';
 import catalogReducer from '@app/redusers/catalog-slice';
-
-export const store = configureStore({
+import { createWrapper } from 'next-redux-wrapper';
+import { setupListeners } from '@reduxjs/toolkit/query';
+export const makeStore = () => configureStore({
   reducer: {
     catalog: catalogReducer,
     [ramApi.reducerPath]: ramApi.reducer,
@@ -11,5 +12,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(ramApi.middleware),
 });
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppStore["getState"]>;
+
+export const wrapper = createWrapper<AppStore>(makeStore, { debug: true})

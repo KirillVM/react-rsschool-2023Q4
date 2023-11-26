@@ -9,7 +9,7 @@ import {
 
 const SearchForm = (): JSX.Element => {
   const [value, setValue] = useState<string>(
-    localStorage.getItem('lastSearchRow') || ''
+    /*localStorage.getItem('lastSearchRow') ||*/ ''
   );
   const dispatch = useAppDispatch();
 
@@ -22,7 +22,7 @@ const SearchForm = (): JSX.Element => {
   };
 
   const handleSubmitButtonClick = (): void => {
-    localStorage.setItem('lastSearchRow', value);
+    // localStorage.setItem('lastSearchRow', value);
     dispatch(setPageNumber(1));
     dispatch(setSearchParams(value));
   };

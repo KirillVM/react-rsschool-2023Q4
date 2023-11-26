@@ -16,7 +16,7 @@ export interface CatalogState {
 const initialState: CatalogState = {
   data: cardData,
   detailedData: getCardDataFromResponse(cardData.results[1]),
-  searchParams: localStorage.getItem('lastSearchRow') || '',
+  searchParams: /*(window && localStorage.getItem('lastSearchRow')) ||*/ '',
   pageNumber: 1,
   itemPerPage: 20,
   isDetailedLoading: false,

@@ -3,25 +3,19 @@ import SearchForm from '@components/search-form/search-form';
 import DataList from '@components/data-list/data-list';
 import Button from '@components/button/button';
 import DetailedData from '@components/data-list/detailed-data/detailed-data';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import Pagination from '@components/pagination/pagination';
 
 import './catalog.css';
 import { useAppSelector } from '@src/app/hooks/hooks';
 
-const Catalog = (): JSX.Element => {
+const Characters = (): JSX.Element => {
   const searchParams = useAppSelector((state) => state.catalog.searchParams);
   const currentPage = useAppSelector((state) => state.catalog.pageNumber);
+  const router = useRouter();
 
-  const location = useLocation();
-  const navigate: NavigateFunction = useNavigate();
-  const currentQueryParams = new URLSearchParams(location.search);
-
-  const handleParamsUpdate = (): void => {
-    currentQueryParams.set('name', searchParams);
-    currentQueryParams.set('page', currentPage.toString());
-    const newSearch: string = `?${currentQueryParams}`;
-    navigate({ search: newSearch });
+  const handleParamsUpdate = () => {
+    router.push(`?name=${searchParams}&page=${currentPage}`, undefined, { shallow: true });
   };
 
   const [isError, setIsError] = useState<boolean>(false);
@@ -114,4 +108,4 @@ const Catalog = (): JSX.Element => {
   );
 };
 
-export default Catalog;
+export default Characters;

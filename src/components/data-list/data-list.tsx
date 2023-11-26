@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from 'react';
 import { RickAndMortyResponseResult } from '../../types/ram-types';
 import Data from './data/data';
 import './data-list.css';
-import sliceSearchData from '@utils/slice-search-data';
+import sliceSearchData from '@src/utils/temp/slice-search-data';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
 import { useGetCharactersQuery } from '@src/app/ramApi/ram-api';
 import {
@@ -16,10 +16,10 @@ type DataListProps = {
 };
 
 const DataList = ({ onClickDataHandler }: DataListProps): JSX.Element => {
+
   const searchParams = useAppSelector((state) => state.catalog.searchParams);
   const currentPage = useAppSelector((state) => state.catalog.pageNumber);
   const itemPerPage = useAppSelector((state) => state.catalog.itemPerPage);
-
   const dispatch = useAppDispatch();
 
   const { data, isLoading, isFetching, isError } = useGetCharactersQuery({

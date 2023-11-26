@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { BASE_URL } from '@src/constants/constants';
+import { HYDRATE } from 'next-redux-wrapper';
 import {
   RickAndMortyResponse,
   RickAndMortyResponseResult,
@@ -8,6 +9,11 @@ import {
 export const ramApi = createApi({
   reducerPath: 'ramApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
   endpoints: (build) => ({
     getCharacters: build.query<RickAndMortyResponse, Record<string, string>>({
       query: ({ itemName = '', page = '1' }) =>
@@ -19,4 +25,6 @@ export const ramApi = createApi({
   }),
 });
 
-export const { useGetCharactersQuery, useGetCharactersByIdQuery } = ramApi;
+export const { useGetCharactersQuery, useGetCharactersByIdQuery, util: { getRunningQueriesThunk }} = ramApi;
+
+export const { getCharacters, getCharactersById } = ramApi.endpoints;

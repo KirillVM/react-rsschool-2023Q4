@@ -1,21 +1,24 @@
 import { CardData } from '../../../types/ram-types';
 import './detailed-data.css';
 import { getCardDataFromResponse } from '../../../utils/get-narrow-data';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useGetCharactersByIdQuery } from '@src/app/ramApi/ram-api';
+import { getCharactersById, getRunningQueriesThunk, useGetCharactersByIdQuery } from '@src/app/ramApi/ram-api';
 import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
 import {
   setDetailedCardData,
   setIsLoadingDetailed,
 } from '@src/app/redusers/catalog-slice';
 import Loader from '@src/components/loader/loader';
+import { useRouter } from 'next/router';
+import { AppStore, wrapper } from '@src/app/store/store';
 
 type DetailedDataProps = {
   idDetailed: number;
 };
 
 const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
+  const router = useRouter();
+  router.push(`?id=${idDetailed}`, undefined, { shallow: true });
   const dispatch = useAppDispatch();
   const { data, isLoading, isFetching, isError } = useGetCharactersByIdQuery(
     idDetailed.toString()
@@ -31,21 +34,6 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
   const detailedCardData: CardData = useAppSelector(
     (state) => state.catalog.detailedData
   );
-
-  const location = useLocation();
-  const navigate: NavigateFunction = useNavigate();
-  const currentQueryParams = new URLSearchParams(location.search);
-
-  const handleParamsUpdate = (): void => {
-    currentQueryParams.set('id', idDetailed.toString());
-    const newSearch: string = `?${currentQueryParams}`;
-    navigate({ search: newSearch });
-  };
-
-  useEffect((): void => {
-    handleParamsUpdate();
-  }, []);
-
   return (
     <>
       {isLoading || isFetching ? (
@@ -86,3 +74,18 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
 };
 
 export default DetailedData;
+
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store: AppStore) => async (context) => {
+    const id = context.params?.id;
+    console.log(id);
+    if (typeof id === "string"){
+      store.dispatch(getCharactersById.initiate(id))
+    }
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    return {
+      props: {},
+    }
+  }
+)
