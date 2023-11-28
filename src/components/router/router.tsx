@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import ErrorBoundary from '../error-boundary/error-boundary';
-import RootLayout from '@src/pages/root-layout';
+import RootLayout from '@src/layouts/root-layout';
+import MainPage from '@src/pages/main/main-page';
+import UncontrolledForm from '../forms/u-form/u-form';
 
 export const router = createBrowserRouter([
   {
@@ -13,11 +15,11 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <p></p>,
+        element: <MainPage />,
       },
       {
         path: 'u-form',
-        element: <p>u-form</p>,
+        element: <UncontrolledForm />,
       },
       {
         path: 'rhf-form',
