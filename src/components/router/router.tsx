@@ -1,9 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
+import ErrorBoundary from '../error-boundary/error-boundary';
+import RootLayout from '@src/pages/root-layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <p>Main + Error Boundary</p>,
+    element: (
+      <ErrorBoundary>
+        <RootLayout />
+      </ErrorBoundary>
+    ),
     children: [
       {
         index: true,
@@ -21,7 +27,11 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <p>Main + Error Boundary</p>,
+    element: (
+      <ErrorBoundary>
+        <RootLayout />
+      </ErrorBoundary>
+    ),
     children: [
       {
         path: '*',
