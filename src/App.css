@@ -2,5 +2,5 @@
   width: 100vw;
   margin: 0 auto;
   scroll-behavior: smooth;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
