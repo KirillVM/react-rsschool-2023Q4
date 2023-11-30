@@ -1,5 +1,8 @@
 import { SyntheticEvent, useRef } from 'react';
 import './u-form.css';
+import AutoInput from '@src/components/autocomplete-input/autocomplete-input';
+
+const countries = ['Russia', 'USA', 'Ukraine', 'Germany', 'Poland'];
 
 const UncontrolledForm = (): JSX.Element => {
   const inputName = useRef(null);
@@ -10,7 +13,7 @@ const UncontrolledForm = (): JSX.Element => {
   const selectGender = useRef(null);
   const inputAcceptTC = useRef(null);
   const inputAvatar = useRef(null);
-  const selectCountry = useRef(null);
+  // const selectCountry = useRef(null);
 
   const handleFromSubmit = (
     e: SyntheticEvent<HTMLFormElement, SubmitEvent>
@@ -87,11 +90,11 @@ const UncontrolledForm = (): JSX.Element => {
           />
         </label>
 
-        <select name="country" id="country" ref={selectCountry}>
+        {/* <select name="country" id="country" ref={selectCountry}>
           <option value="Russia">Russia</option>
           <option value="Ukrain">Ukrain</option>
-        </select>
-
+        </select> */}
+        <AutoInput countries={countries} />
         <button
           className="search-button"
           type="submit"
