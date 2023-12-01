@@ -1,4 +1,10 @@
-import { ChangeEvent, KeyboardEvent, useState, useRef, useEffect } from 'react';
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  useState,
+  useRef,
+  MouseEvent,
+} from 'react';
 import './autocomplete-input.css';
 //import { string } from "yup";
 
@@ -23,7 +29,9 @@ const onInputPressArrowDown = (e: KeyboardEvent<HTMLInputElement>) => {
   return e;
 };
 
-const getOptions = () => {};
+// const getOptions = (inputData: string) => {
+
+// };
 
 interface AutoInputProps {
   countries: string[];
@@ -42,8 +50,8 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
 
   const onInputType = (e: KeyboardEvent<HTMLInputElement>) => {
     if (inputData.trim().length > 0) {
-      const options = getOptions();
-      return { e, options }; // для пушаа
+      // const options = getOptions(inputData);
+      return { e /*options*/ }; // для пушаа
     }
   };
 
@@ -68,22 +76,48 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: Event): void => {
-      if (!optionsList.current?.contains(e.target as Node)) {
-        setIsShowOptions(false);
-      }
-    };
-    document.body.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setIsShowOptions]);
+  const onInputKeyUpTab = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!optionsList.current?.contains(e.target as Node)) {
+      setIsShowOptions(false);
+    }
+  };
+
+  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    console.log(e.code);
+    switch (e.code) {
+      case keyCode.tab:
+        onInputKeyUpTab(e);
+        break;
+    }
+  };
+
+  const selectOption = (option: HTMLUListElement) => {
+    const value = option.getAttribute('data-option-value');
+    console.log(value);
+    value && setInputData(value);
+    setIsShowOptions(false);
+  };
+
+  const handleOptionsClick = (e: MouseEvent<HTMLUListElement>) => {
+    selectOption(e.currentTarget);
+  };
+
+  // useEffect(() => {
+  //   const handleClickOutside = (e: Event): void => {
+  //     if (!optionsList.current?.contains(e.target as Node)) {
+  //       setIsShowOptions(false);
+  //     }
+  //   };
+  //   document.body.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [setIsShowOptions]);
 
   return (
     <div className="auto-input">
       <label htmlFor="country">
-        <p>Country</p>
+        <p className="auto-label">Country</p>
       </label>
       <select
         name="countries"
@@ -98,8 +132,9 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
           </option>
         ))}
       </select>
-      <div className="autocomlete">
+      <div className="autocomplete">
         <input
+          className="auto-input"
           id="country"
           type="text"
           role="combobox"
@@ -108,14 +143,18 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
           autoCapitalize="none"
           aria-expanded="false"
           onKeyUp={handleInputKeyUp}
+          onKeyDown={handleInputKeyDown}
           onChange={handleInputChange}
+          onFocus={() => setIsShowOptions(true)}
+          onBlur={() => setIsShowOptions(false)}
         />
       </div>
       <ul
         ref={optionsList}
         id="country_autocomplete-options"
         role="listbox"
-        className={isShowOptions ? '' : 'hiden'}
+        className={isShowOptions ? 'options' : 'options hiden'}
+        onClick={handleOptionsClick}
       >
         {countries.map((country, index) => {
           return (
@@ -126,6 +165,7 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
               aria-selected={index == 1 ? 'true' : 'false'}
               data-option-value={index}
               id={`autocomplete_${index}`}
+              className="auto-option"
             >
               {country}
             </li>

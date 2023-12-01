@@ -15,8 +15,41 @@
   display: none;
 }
 
-.autocomplete [role='listbox'] {
-  max-height: 12rem;
+.autocomplete {
+  width: 22.4rem;
+}
+
+/* .autocomplete [role='listbox'] {
+
+} */
+
+.auto-label {
+  padding: 0 0 0.5rem 0;
+  margin: 0;
+}
+
+.auto-input {
+  width: 22rem;
+}
+
+.options {
+  padding: 0.1rem 0 0 0;
+  margin: 0;
+  font-size: 1.3rem;
+  width: 21rem;
+  max-height: 2.1rem;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+}
+
+.auto-option {
+  box-sizing: border-box;
+  border: 1px solid white;
+  list-style-type: none;
+}
+
+.auto-option:hover {
+  background-color: grey;
+  cursor: pointer;
+  border: 2px solid rgb(24, 109, 236);
 }

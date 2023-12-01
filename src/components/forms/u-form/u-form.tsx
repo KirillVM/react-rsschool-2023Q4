@@ -75,9 +75,12 @@ const UncontrolledForm = (): JSX.Element => {
           <option value="female">female</option>
         </select>
 
-        <label htmlFor="acept-tc">
-          Do you accept with T&C?
+        <label
+          htmlFor="acept-tc"
+          style={{ display: 'flex', flexDirection: 'row' }}
+        >
           <input type="checkbox" ref={inputAcceptTC} id="acept-tc" />
+          <p>Do you accept with T&C?</p>
         </label>
 
         <label htmlFor="avatar">
