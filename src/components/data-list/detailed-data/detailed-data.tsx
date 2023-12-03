@@ -18,7 +18,6 @@ type DetailedDataProps = {
 
 const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
   const router = useRouter();
-  router.push(`?id=${idDetailed}`, undefined, { shallow: true });
   const dispatch = useAppDispatch();
   const { data, isLoading, isFetching, isError } = useGetCharactersByIdQuery(
     idDetailed.toString()
@@ -26,9 +25,10 @@ const DetailedData = ({ idDetailed }: DetailedDataProps): JSX.Element => {
 
   useEffect(() => {
     dispatch(setIsLoadingDetailed(isLoading));
-  }, [isLoading, dispatch]);
+  }, [isLoading]);
   useEffect(() => {
     data && dispatch(setDetailedCardData(getCardDataFromResponse(data)));
+    router.push(`?id=${idDetailed}`, undefined, { shallow: true });
   }, [data]);
 
   const detailedCardData: CardData = useAppSelector(
@@ -79,7 +79,6 @@ export default DetailedData;
 export const getServerSideProps = wrapper.getServerSideProps(
   (store: AppStore) => async (context) => {
     const id = context.params?.id;
-    console.log(id);
     if (typeof id === "string"){
       store.dispatch(getCharactersById.initiate(id))
     }
