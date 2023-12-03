@@ -1,30 +1,49 @@
 import { SyntheticEvent, useRef } from 'react';
 import './u-form.css';
 import AutoInput from '@src/components/autocomplete-input/autocomplete-input';
-
-const countries = ['Russia', 'USA', 'Ukraine', 'Germany', 'Poland'];
+import { useAppDispatch, useAppSelector } from '@src/app/hooks/hooks';
+import { FormState, Gender } from '../form-interfaces';
+import { setFormData } from '@src/app/reducers/form-slice';
 
 const UncontrolledForm = (): JSX.Element => {
-  const inputName = useRef(null);
-  const inputAge = useRef(null);
-  const inputEmail = useRef(null);
-  const inputPassword = useRef(null);
-  const inputConfirmPassword = useRef(null);
-  const selectGender = useRef(null);
-  const inputAcceptTC = useRef(null);
-  const inputAvatar = useRef(null);
-  // const selectCountry = useRef(null);
+  const selectedCountry = useAppSelector((state) => state.form.selectedCountry);
+  const countries = useAppSelector((state) => state.form.countries);
+  const dataTest = useAppSelector((state) => state.form);
+  const dispatch = useAppDispatch();
+
+  const inputName = useRef<HTMLInputElement>(null);
+  const inputAge = useRef<HTMLInputElement>(null);
+  const inputEmail = useRef<HTMLInputElement>(null);
+  const inputPassword = useRef<HTMLInputElement>(null);
+  const inputConfirmPassword = useRef<HTMLInputElement>(null);
+  const selectGender = useRef<HTMLSelectElement>(null);
+  const inputAcceptTC = useRef<HTMLInputElement>(null);
+  const inputAvatar = useRef<HTMLInputElement>(null);
 
   const handleFromSubmit = (
     e: SyntheticEvent<HTMLFormElement, SubmitEvent>
   ): void => {
     e.preventDefault();
-    // const form: HTMLFormElement | null = document.querySelector('.u-form');
-    // if (form) {
-    //   const formData = new FormData(form);
-    //   console.log(formData.get('name'));
-    // }
+    console.log(e.target);
+    const data: FormState = {
+      name: inputName.current?.value,
+      age: inputAge.current?.value,
+      email: inputEmail.current?.value,
+      password: inputPassword.current?.value,
+      confirmPassword: inputConfirmPassword.current?.value,
+      gender: selectGender.current?.value as Gender,
+      acceptTC: !!inputAcceptTC.current?.value,
+      avatar: inputAvatar.current?.value,
+      country: selectedCountry,
+    };
+    dispatch(setFormData(data));
+    console.log(data);
+    console.log(dataTest);
   };
+
+  // useEffect(() => {
+  //   dispatch(setFormData(formData));
+  // },[formData])
   return (
     <>
       <form className="u-form" onSubmit={handleFromSubmit}>
@@ -87,10 +106,10 @@ const UncontrolledForm = (): JSX.Element => {
         </div>
 
         <label
-          htmlFor="acept-tc"
+          htmlFor="accept-tc"
           style={{ display: 'flex', flexDirection: 'row' }}
         >
-          <input type="checkbox" ref={inputAcceptTC} id="acept-tc" />
+          <input type="checkbox" ref={inputAcceptTC} id="accept-tc" />
           <p>Do you accept with T&C?</p>
         </label>
 
@@ -104,11 +123,8 @@ const UncontrolledForm = (): JSX.Element => {
           />
         </label>
 
-        {/* <select name="country" id="country" ref={selectCountry}>
-          <option value="Russia">Russia</option>
-          <option value="Ukrain">Ukrain</option>
-        </select> */}
         <AutoInput countries={countries} />
+
         <button
           className="search-button"
           type="submit"

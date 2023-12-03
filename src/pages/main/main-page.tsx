@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import './main-page.css';
 
 const MainPage = (): JSX.Element => {
+  // const formData = useAppSelector(state => state.form.countries)
   return (
     <>
       <div className="main-page">

@@ -7,6 +7,9 @@ import {
   useEffect,
 } from 'react';
 import './autocomplete-input.css';
+import { useFormContext } from 'react-hook-form';
+import { useAppDispatch } from '@src/app/hooks/hooks';
+import { setCurrentCountry } from '@src/app/reducers/form-slice';
 //import { string } from "yup";
 
 const keyCode = {
@@ -30,21 +33,18 @@ const onInputPressArrowDown = (e: KeyboardEvent<HTMLInputElement>) => {
   return e;
 };
 
-// const getOptions = (inputData: string) => {
-
-// };
-
 interface AutoInputProps {
   countries: string[];
 }
 
 const AutoInput = (props: AutoInputProps): JSX.Element => {
+  const methods = useFormContext();
+  const dispatch = useAppDispatch();
   const { countries } = props;
 
   const [matchCountries, setMatchCountries] = useState<string[]>(countries);
   const [inputData, setInputData] = useState<string>('');
   const [isShowOptions, setIsShowOptions] = useState<boolean>(false);
-
   const optionsList = useRef<HTMLUListElement>(null);
 
   // useCallback ????
@@ -75,7 +75,7 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
       case keyCode.shiftLeft:
       case keyCode.shiftRight:
         break;
-      case keyCode.arrowUp:
+      case keyCode.arrowDown:
         onInputPressArrowDown(e);
         break;
       default:
@@ -122,6 +122,9 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
     };
   }, [setIsShowOptions]);
 
+  useEffect(() => {
+    dispatch(setCurrentCountry(inputData));
+  }, [inputData]);
   return (
     <div className="auto-input">
       <label htmlFor="country">
@@ -141,22 +144,44 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
         ))}
       </select>
       <div className="autocomplete">
-        <input
-          autoComplete="off"
-          className="auto-input"
-          id="country"
-          type="text"
-          role="combobox"
-          aria-owns="country_autocomplete-options"
-          aria-autocomplete="list"
-          autoCapitalize="none"
-          aria-expanded="false"
-          value={inputData}
-          onKeyUp={handleInputKeyUp}
-          onKeyDown={handleInputKeyDown}
-          onChange={handleInputChange}
-          onFocus={() => setIsShowOptions(true)}
-        />
+        {methods ? (
+          <input
+            {...methods.register('country', {
+              required: true,
+            })}
+            autoComplete="off"
+            className="auto-input"
+            id="country"
+            type="text"
+            role="combobox"
+            aria-owns="country_autocomplete-options"
+            aria-autocomplete="list"
+            autoCapitalize="none"
+            aria-expanded="false"
+            value={inputData}
+            onKeyUp={handleInputKeyUp}
+            onKeyDown={handleInputKeyDown}
+            onChange={handleInputChange}
+            onFocus={() => setIsShowOptions(true)}
+          />
+        ) : (
+          <input
+            autoComplete="off"
+            className="auto-input"
+            id="country"
+            type="text"
+            role="combobox"
+            aria-owns="country_autocomplete-options"
+            aria-autocomplete="list"
+            autoCapitalize="none"
+            aria-expanded="false"
+            value={inputData}
+            onKeyUp={handleInputKeyUp}
+            onKeyDown={handleInputKeyDown}
+            onChange={handleInputChange}
+            onFocus={() => setIsShowOptions(true)}
+          />
+        )}
       </div>
       <ul
         ref={optionsList}
