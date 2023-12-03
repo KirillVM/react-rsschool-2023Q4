@@ -70,10 +70,21 @@ const UncontrolledForm = (): JSX.Element => {
           />
         </label>
 
-        <select name="gender" id="gender" ref={selectGender}>
-          <option value="male">male</option>
-          <option value="female">female</option>
-        </select>
+        <div>
+          <label htmlFor="gender">Gender</label>
+          <select
+            defaultValue={'none'}
+            name="gender"
+            id="gender"
+            ref={selectGender}
+          >
+            <option disabled hidden value="none">
+              none
+            </option>
+            <option value="male">male</option>
+            <option value="female">female</option>
+          </select>
+        </div>
 
         <label
           htmlFor="acept-tc"

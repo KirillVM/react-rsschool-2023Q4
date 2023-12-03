@@ -4,6 +4,7 @@ import {
   useState,
   useRef,
   MouseEvent,
+  useEffect,
 } from 'react';
 import './autocomplete-input.css';
 //import { string } from "yup";
@@ -39,19 +40,25 @@ interface AutoInputProps {
 
 const AutoInput = (props: AutoInputProps): JSX.Element => {
   const { countries } = props;
+
+  const [matchCountries, setMatchCountries] = useState<string[]>(countries);
   const [inputData, setInputData] = useState<string>('');
-  const optionsList = useRef<HTMLUListElement>(null);
   const [isShowOptions, setIsShowOptions] = useState<boolean>(false);
+
+  const optionsList = useRef<HTMLUListElement>(null);
 
   // useCallback ????
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setInputData(e.target.value);
   };
 
-  const onInputType = (e: KeyboardEvent<HTMLInputElement>) => {
+  const onInputType = () => {
     if (inputData.trim().length > 0) {
-      // const options = getOptions(inputData);
-      return { e /*options*/ }; // для пушаа
+      const match = inputData.toLowerCase();
+      const options = countries.filter((country) =>
+        country.toLowerCase().includes(match)
+      );
+      setMatchCountries(options);
     }
   };
 
@@ -72,7 +79,7 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
         onInputPressArrowDown(e);
         break;
       default:
-        onInputType(e);
+        onInputType();
     }
   };
 
@@ -91,28 +98,29 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
     }
   };
 
-  const selectOption = (option: HTMLUListElement) => {
-    const value = option.getAttribute('data-option-value');
+  const selectOption = (option: HTMLLIElement) => {
+    const value = option.attributes.getNamedItem('data-option-value')?.value;
     console.log(value);
     value && setInputData(value);
     setIsShowOptions(false);
   };
 
   const handleOptionsClick = (e: MouseEvent<HTMLUListElement>) => {
-    selectOption(e.currentTarget);
+    console.log(e.target);
+    selectOption(e.target as HTMLLIElement);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (e: Event): void => {
-  //     if (!optionsList.current?.contains(e.target as Node)) {
-  //       setIsShowOptions(false);
-  //     }
-  //   };
-  //   document.body.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [setIsShowOptions]);
+  useEffect(() => {
+    const handleClickOutside = (e: Event): void => {
+      if (!optionsList.current?.contains(e.target as Node)) {
+        setIsShowOptions(false);
+      }
+    };
+    document.body.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsShowOptions]);
 
   return (
     <div className="auto-input">
@@ -134,6 +142,7 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
       </select>
       <div className="autocomplete">
         <input
+          autoComplete="off"
           className="auto-input"
           id="country"
           type="text"
@@ -142,11 +151,11 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
           aria-autocomplete="list"
           autoCapitalize="none"
           aria-expanded="false"
+          value={inputData}
           onKeyUp={handleInputKeyUp}
           onKeyDown={handleInputKeyDown}
           onChange={handleInputChange}
           onFocus={() => setIsShowOptions(true)}
-          onBlur={() => setIsShowOptions(false)}
         />
       </div>
       <ul
@@ -156,14 +165,14 @@ const AutoInput = (props: AutoInputProps): JSX.Element => {
         className={isShowOptions ? 'options' : 'options hiden'}
         onClick={handleOptionsClick}
       >
-        {countries.map((country, index) => {
+        {matchCountries.map((country, index) => {
           return (
             <li
               role="option"
               key={country}
               tabIndex={-1}
               aria-selected={index == 1 ? 'true' : 'false'}
-              data-option-value={index}
+              data-option-value={country}
               id={`autocomplete_${index}`}
               className="auto-option"
             >
