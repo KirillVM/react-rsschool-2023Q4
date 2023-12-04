@@ -1,0 +1,13 @@
+.root-layout-wrapper {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.root-layout-main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  background-image: url('https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666336002_31-mykaleidoscope-ru-p-zloi-rik-i-morti-oboi-33.jpg');
+}
